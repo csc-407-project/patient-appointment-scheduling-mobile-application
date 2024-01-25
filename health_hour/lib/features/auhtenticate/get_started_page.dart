@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:health_hour/common%20widgets/app_button.dart';
 import 'package:health_hour/constants/constants.dart';
+import 'package:health_hour/features/auhtenticate/signup/signup_page.dart';
 
 class GetStarted extends ConsumerStatefulWidget {
   const GetStarted({super.key});
@@ -34,7 +35,10 @@ class _GetStartedState extends ConsumerState<GetStarted> {
                     height: 0.008.sh,
                   ),
                   AppButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => const SignUpPage()));
+                    },
                     backgroundColor: Colors.white,
                     foregroundColor: ProjectColors.primaryColor,
                     child: const Text('Doctor'),
@@ -43,7 +47,10 @@ class _GetStartedState extends ConsumerState<GetStarted> {
                     height: 0.026.sh,
                   ),
                   AppButton(
-                    onPressed: () {},
+                    onPressed: () {
+                       Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => const SignUpPage()));
+                    },
                     backgroundColor: Colors.white,
                     foregroundColor: ProjectColors.primaryColor,
                     child: const Text('Student'),
@@ -56,7 +63,9 @@ class _GetStartedState extends ConsumerState<GetStarted> {
                     children: [
                       const Text('Already have an account?'),
                       TextButton(
-                          onPressed: () {}, child: const Text('Sign In')),
+                          onPressed: () {
+
+                          }, child: const Text('Sign In')),
                     ],
                   )
                 ],
