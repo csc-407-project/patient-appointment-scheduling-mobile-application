@@ -19,6 +19,7 @@ class ProjectImages {
  static const String onboardingImage3 = 'assets/images/Group 3925O3.png';
  static const String onboardingImage1 = 'assets/images/Onboarding1.png';
 static const String getStartedImage = 'assets/images/ImageGS.jpg';
+static const String contact = 'assets/images/Picture.png';
 //     static const String onboardingImage2 = 'assets/images/Group 3924.svg';
 //  static const String onboardingImage3 = 'assets/images/Group 3925.svg';
 //  static const String onboardingImage1 = 'assets/images/Group 3928.svg';

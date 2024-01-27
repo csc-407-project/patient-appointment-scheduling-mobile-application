@@ -25,6 +25,7 @@ dependencies:
   flutter_screenutil: ^5.9.0
   flutter_svg: ^2.0.9
   smooth_page_indicator: ^1.1.0
+  flutter_native_splash: ^2.3.9
 
 dev_dependencies:
   flutter_test:
@@ -33,7 +34,9 @@ dev_dependencies:
 
   flutter_lints: ^2.0.0
 
-
+flutter_native_splash:
+  image: assets/hhlogo.png
+  color: "#2F195A"
 
 # The following section is specific to Flutter packages.
 flutter:
