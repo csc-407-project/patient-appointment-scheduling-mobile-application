@@ -26,6 +26,7 @@ dependencies:
   flutter_svg: ^2.0.9
   smooth_page_indicator: ^1.1.0
   flutter_native_splash: ^2.3.9
+  table_calendar: ^3.0.9
 
 dev_dependencies:
   flutter_test:
