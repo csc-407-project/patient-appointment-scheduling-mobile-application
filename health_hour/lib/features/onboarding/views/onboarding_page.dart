@@ -32,25 +32,26 @@ class _State extends ConsumerState<OnboardingPage> {
               child: PageView.builder(
                 itemCount: onBoardingPages.length,
                 // physics: ,
-                onPageChanged: (value) => ref.read(pageProvider.notifier).changePage(value),
+                onPageChanged: (value) =>
+                    ref.read(pageProvider.notifier).changePage(value),
                 itemBuilder: (context, index) => Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                            Image.asset(onBoardingPages[currentPage].image),
-                // SvgPicture.asset(onBoardingPages[currentPage].image),
+                    Image.asset(
+                      onBoardingPages[currentPage].image,
+                      height: 0.5.sh,
+                      width: 0.75.sw,
+                    ),
+                    // SvgPicture.asset(onBoardingPages[currentPage].image),
                     Text(
                       onBoardingPages[currentPage].header,
-                      style:  TextStyle(
-                          fontSize: 18.sp, fontWeight: FontWeight.w700),
+                      style: ProjectConstants.heading,
                       textAlign: TextAlign.center,
                     ),
                     ProjectConstants.largeSpacing,
                     Text(
                       onBoardingPages[index].description,
-                      style:  TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 15.sp,
-                      ),
+                      style: ProjectConstants.onboardingBody,
                       textAlign: TextAlign.center,
                     ),
                   ],
@@ -61,15 +62,14 @@ class _State extends ConsumerState<OnboardingPage> {
               activeIndex: currentPage,
               count: 3,
               effect: const WormEffect(
-                spacing: 20.0,
-                radius: 8.0,
-                dotWidth: 8.0,
-                dotHeight: 8.0,
-                // paintStyle: PaintingStyle.stroke,
-                // strokeWidth: 1.5,
-                // dotColor: ProjectColors.primaryGreen,
-                activeDotColor: ProjectColors.primaryColor
-              ),
+                  spacing: 20.0,
+                  radius: 8.0,
+                  dotWidth: 8.0,
+                  dotHeight: 8.0,
+                  // paintStyle: PaintingStyle.stroke,
+                  // strokeWidth: 1.5,
+                  // dotColor: ProjectColors.primaryGreen,
+                  activeDotColor: ProjectColors.primaryColor),
               onDotClicked: (index) {
                 ref.read(pageProvider.notifier).dotClicked(index);
               },
@@ -93,8 +93,8 @@ class _State extends ConsumerState<OnboardingPage> {
                   ref
                       .read(onboardingRepositoryProvider)
                       .setOnboardingComplete(true);
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => const GetStarted()));
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => const GetStarted()));
                   // Navigate to sign up screen
                 }),
           ],

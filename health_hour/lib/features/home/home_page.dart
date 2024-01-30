@@ -45,7 +45,8 @@ class _HomePageState extends ConsumerState<HomePage> {
               SizedBox(
                 width: 0.75.sw,
                 child: ListTile(
-                  title: const Text('Adelanaire Ewaoluwa'),
+                  contentPadding: const EdgeInsets.all(0),
+                  title:  Text('Adelanaire Ewaoluwa', style: ProjectConstants.headingNameTextStyle,),
                   subtitle: SizedBox(
                     height: 40.h,
                     child: Row(
@@ -75,8 +76,8 @@ class _HomePageState extends ConsumerState<HomePage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Upcoming Schedule'),
-              TextButton(onPressed: () {}, child: const Text('View all'))
+               Text('Upcoming Schedule', style: ProjectConstants.regularBold,),
+              TextButton(onPressed: () {}, child:  Text('View all', style: ProjectConstants.regularBold.copyWith(fontSize: 10.sp)))
             ],
           ),
           SizedBox(
@@ -90,12 +91,12 @@ class _HomePageState extends ConsumerState<HomePage> {
               ),
             ),
           ),
-          // const Center(
-          //     child:UpcomingScheduleCard(name: 'Dr. Lawal', specialization: 'Dentist', date: 'Friday, 5 Nov 2024', time: '09:00am - 11:00am')),
+          SizedBox(
+            height: 0.023.sh,),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text("Let’s find the doctor"),
+               Text("Let’s find the doctor",style: ProjectConstants.regularBold.copyWith(color: const Color(0xFF1E1F2E)),),
               IconButton(
                   onPressed: () {},
                   icon: Transform.rotate(

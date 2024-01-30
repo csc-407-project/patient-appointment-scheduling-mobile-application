@@ -6,6 +6,8 @@ import 'package:health_hour/common%20widgets/app_button.dart';
 import 'package:health_hour/constants/constants.dart';
 import 'package:health_hour/features/auhtenticate/signup/signup_page.dart';
 
+import 'signin/signin_page.dart';
+
 class GetStarted extends ConsumerStatefulWidget {
   const GetStarted({super.key});
 
@@ -31,31 +33,31 @@ class _GetStartedState extends ConsumerState<GetStarted> {
                 //  mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text('Get Started as a:'),
-                   SizedBox(
+                  SizedBox(
                     height: 0.008.sh,
                   ),
                   AppButton(
                     onPressed: () {
-                      Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => const SignUpPage()));
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const SignUpPage()));
                     },
                     backgroundColor: Colors.white,
                     foregroundColor: ProjectColors.primaryColor,
                     child: const Text('Doctor'),
                   ),
-                   SizedBox(
+                  SizedBox(
                     height: 0.026.sh,
                   ),
                   AppButton(
                     onPressed: () {
-                       Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => const SignUpPage()));
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const SignUpPage()));
                     },
                     backgroundColor: Colors.white,
                     foregroundColor: ProjectColors.primaryColor,
                     child: const Text('Student'),
                   ),
-                   SizedBox(
+                  SizedBox(
                     height: 0.125.sh,
                   ),
                   Row(
@@ -64,8 +66,10 @@ class _GetStartedState extends ConsumerState<GetStarted> {
                       const Text('Already have an account?'),
                       TextButton(
                           onPressed: () {
-
-                          }, child: const Text('Sign In')),
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => const SignInPage()));
+                          },
+                          child: const Text('Sign In')),
                     ],
                   )
                 ],

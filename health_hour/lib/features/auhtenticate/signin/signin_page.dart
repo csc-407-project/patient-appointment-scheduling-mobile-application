@@ -1,8 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:health_hour/common%20widgets/app_button.dart';
 import 'package:health_hour/common%20widgets/app_textfield.dart';
+import 'package:health_hour/constants/constants.dart';
+import 'package:health_hour/features/auhtenticate/signup/signup_page.dart';
 import 'package:health_hour/features/home/home_page.dart';
 
 class SignInPage extends ConsumerStatefulWidget {
@@ -13,6 +16,8 @@ class SignInPage extends ConsumerStatefulWidget {
 }
 
 class _SignInPageState extends ConsumerState<SignInPage> {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,31 +30,44 @@ class _SignInPageState extends ConsumerState<SignInPage> {
             SizedBox(
               height: 0.125.sh,
             ),
-            const Text('Welcome!'),
+            Text('Welcome!',
+                style: ProjectConstants.heading
+                    .copyWith(color: ProjectColors.primaryColor)),
             const Text("Let’s get started creating a patient account."),
-            
             SizedBox(
-              height: 0.026.sh,
+              height: 0.06.sh,
             ),
-            const AppTextField(
+            AppTextField(
+              controller: emailController,
               label: 'Email',
               prefixIcon: Icons.mail_outlined,
             ),
             SizedBox(
               height: 0.026.sh,
             ),
-            const AppTextField(
+            AppTextField(
+              controller: passwordController,
               label: 'Password',
               prefixIcon: Icons.lock_outline,
               suffixIcon: Icons.remove_red_eye,
             ),
             SizedBox(
-              height: 0.026.sh,
+              height: 0.06.sh,
             ),
             AppButton(
-              onPressed: () {
-                Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => const HomePage()));
+              onPressed: () async {
+                emailController.text.isNotEmpty &&
+                        passwordController.text.isNotEmpty
+                    ? await FirebaseAuth.instance
+                        .signInWithEmailAndPassword(
+                            email: emailController.text,
+                            password: passwordController.text)
+                        .then((value) {
+                        return Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                                builder: (context) => const HomePage()));
+                      })
+                    : null;
               },
               child: const Text('Sign In'),
             ),
@@ -60,9 +78,11 @@ class _SignInPageState extends ConsumerState<SignInPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text('New User?'),
-                TextButton(onPressed: () {
-                  
-                }, child: const Text('Sign Up')),
+                TextButton(
+                    onPressed: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => const SignUpPage())),
+                    child:  Text('Sign Up',  style: ProjectConstants.coloredTextButton,)),
               ],
             ),
           ],

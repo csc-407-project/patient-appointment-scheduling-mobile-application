@@ -60,23 +60,34 @@ class _ScheduleAppointmentPageState extends ConsumerState<BookDoctor> {
                     width: 0.9.sw,
                     child: ListTile(
                       contentPadding: const EdgeInsets.all(0),
-                      title: const Text('Dr. Kemi Owo'),
-                      subtitle: const Text('Cardiologist and Surgeon'),
+                      title: Text(
+                        'Dr. Kemi Owo',
+                        style: ProjectConstants.regularColoredTitleText,
+                      ),
+                      subtitle: Text(
+                        'Cardiologist and Surgeon',
+                        style: ProjectConstants.regularColoredSubTitleText
+                            .copyWith(fontSize: 9.sp),
+                      ),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
-                            Icons.star,
+                            Icons.star_outlined,
                             color: Colors.amber.shade300,
                           ),
-                          const Text('4.9 (96 reviews)')
+                          const Text(
+                            '4.9 (96 reviews)',
+                          )
                         ],
                       ),
                     ),
                   ),
                 ],
               ),
-
+              SizedBox(
+                height: 0.01.sh,
+              ),
               SizedBox(
                 height: 0.12.sh,
                 child: const Row(
@@ -100,10 +111,18 @@ class _ScheduleAppointmentPageState extends ConsumerState<BookDoctor> {
               SizedBox(
                 height: 0.03.sh,
               ),
-              const Align(
-                  alignment: Alignment.topLeft, child: Text('About me')),
-              const Text(
-                  'Dr. Ali Uzair is the top most cardiologist specialist in Crist Hospital in London, UK. He achived several awards for her wonderful contribution Read More. . . '),
+              Align(
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    'About me',
+                    style: ProjectConstants.regularColoredTitleText
+                        .copyWith(fontWeight: FontWeight.w500),
+                  )),
+               Text(
+                'Dr. Ali Uzair is the top most cardiologist specialist in Crist Hospital in London, UK. He achived several awards for her wonderful contribution.',
+                style:ProjectConstants.regularColoredSubTitleText
+                            .copyWith(fontSize: 10.sp) ,
+              ),
               SizedBox(
                 height: 0.045.sh,
               ),

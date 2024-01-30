@@ -19,8 +19,8 @@ final IconData icon;
         child: Icon(icon,
         size: 35.dg,
         color: ProjectColors.primaryColor,),),
-      Text(value),
-      Text(title)
+      Text(value, style: ProjectConstants.regularColoredTitleText,),
+      Text(title, style: ProjectConstants.regularColoredSubTitleText.copyWith(fontSize: 9.sp)),
     ],);
   }
 }

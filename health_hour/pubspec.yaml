@@ -27,6 +27,9 @@ dependencies:
   smooth_page_indicator: ^1.1.0
   flutter_native_splash: ^2.3.9
   table_calendar: ^3.0.9
+  group_button: ^5.3.4
+  firebase_auth: ^4.16.0
+  firebase_core: ^2.24.2
 
 dev_dependencies:
   flutter_test:

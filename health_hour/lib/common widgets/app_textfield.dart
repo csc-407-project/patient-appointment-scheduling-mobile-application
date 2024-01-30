@@ -7,14 +7,16 @@ class AppTextField extends StatelessWidget {
     super.key,
     this.prefixIcon,
     this.suffixIcon,
-    this.label,
+    this.label, this.controller,
   });
   final IconData? prefixIcon;
   final IconData? suffixIcon;
   final String? label;
+  final TextEditingController? controller;
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: controller,
       decoration: InputDecoration(
         label: Text(label!),
           prefixIcon: Icon(prefixIcon!),
