@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,8 +9,8 @@ import 'package:health_hour/features/scheduling/book_doctor.dart';
 import '../../common widgets/doctors_listtile.dart';
 
 class HomePage extends ConsumerStatefulWidget {
-  const HomePage({super.key});
-
+  const HomePage(this.user, {super.key});
+final User? user;
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _HomePageState();
 }
@@ -17,6 +18,7 @@ class HomePage extends ConsumerStatefulWidget {
 class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
+    print(widget.user.toString());
     List doctors = List.generate(
         10,
         (index) => DoctorsListTile(
@@ -46,7 +48,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                 width: 0.75.sw,
                 child: ListTile(
                   contentPadding: const EdgeInsets.all(0),
-                  title:  Text('Adelanaire Ewaoluwa', style: ProjectConstants.headingNameTextStyle,),
+                  title:  Text(widget.user?.displayName ?? '', style: ProjectConstants.headingNameTextStyle,),
                   subtitle: SizedBox(
                     height: 40.h,
                     child: Row(

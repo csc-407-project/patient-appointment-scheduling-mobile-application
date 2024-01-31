@@ -39,7 +39,7 @@ class _GetStartedState extends ConsumerState<GetStarted> {
                   AppButton(
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const SignUpPage()));
+                          builder: (context) => const SignUpPage('Doctor')));
                     },
                     backgroundColor: Colors.white,
                     foregroundColor: ProjectColors.primaryColor,
@@ -51,7 +51,7 @@ class _GetStartedState extends ConsumerState<GetStarted> {
                   AppButton(
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const SignUpPage()));
+                          builder: (context) => const SignUpPage('Student')));
                     },
                     backgroundColor: Colors.white,
                     foregroundColor: ProjectColors.primaryColor,

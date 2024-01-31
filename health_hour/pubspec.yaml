@@ -30,6 +30,7 @@ dependencies:
   group_button: ^5.3.4
   firebase_auth: ^4.16.0
   firebase_core: ^2.24.2
+  cloud_firestore: ^4.14.0
 
 dev_dependencies:
   flutter_test:

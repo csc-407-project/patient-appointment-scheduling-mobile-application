@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,15 +10,17 @@ import 'package:health_hour/features/auhtenticate/signin/signin_page.dart';
 import 'package:health_hour/features/home/home_page.dart';
 
 class SignUpPage extends ConsumerStatefulWidget {
-  const SignUpPage({super.key});
-
+  const SignUpPage(this.userType, {super.key});
+  final String userType;
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _SignUpPageState();
 }
 
 class _SignUpPageState extends ConsumerState<SignUpPage> {
+  final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final firebase = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,12 +33,17 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
             SizedBox(
               height: 0.1.sh,
             ),
-             Text('Welcome!', style: ProjectConstants.heading.copyWith(color: ProjectColors.primaryColor),),
+            Text(
+              'Welcome!',
+              style: ProjectConstants.heading
+                  .copyWith(color: ProjectColors.primaryColor),
+            ),
             const Text("Let’s get started creating a patient account."),
             SizedBox(
               height: 0.03.sh,
             ),
-            const AppTextField(
+            AppTextField(
+              controller: nameController,
               label: 'Full Name',
               prefixIcon: Icons.person_rounded,
             ),
@@ -61,15 +69,27 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
             ),
             AppButton(
               onPressed: () async {
-                emailController.text.isNotEmpty &&
-                        passwordController.text.isNotEmpty
-                    ? await FirebaseAuth.instance
-                        .createUserWithEmailAndPassword(
-                            email: emailController.text,
-                            password: passwordController.text)
-                        .then((value) => Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => const HomePage())))
-                    : null;
+                if (emailController.text.isNotEmpty &&
+                    passwordController.text.isNotEmpty) {
+                  final result = await firebase.createUserWithEmailAndPassword(
+                      email: emailController.text,
+                      password: passwordController.text);
+                  User? user = result.user;
+                  await user!.updateDisplayName(nameController.text);
+                  await user.reload();
+
+                  DocumentReference users =
+                      FirebaseFirestore.instance.doc('users/${user.uid}');
+                  await users.set({
+                    'fullName': nameController.text,
+                    'id': user.uid,
+                    'email': user.email,
+                    'userType': widget.userType
+                  }).then((value) => Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              HomePage(firebase.currentUser))));
+                }
               },
               child: const Text(
                 'Sign Up',
@@ -86,7 +106,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                 TextButton(
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const SignInPage()));
+                          builder: (context) => const SignInPage()));
                     },
                     child: Text(
                       'Sign In',
@@ -100,3 +120,17 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
     );
   }
 }
+
+
+// User? user = value.user;
+//                           user!.updateDisplayName(nameController.text);
+//                          user.reload();
+                      
+//                         DocumentReference users = FirebaseFirestore.instance
+//                             .doc('users/${user.uid}');
+//                          users.set({
+//                           'fullName': nameController.text,
+//                           'id': user.uid,
+//                           'email': user.email,
+//                           'userType': widget.userType
+//                         });
