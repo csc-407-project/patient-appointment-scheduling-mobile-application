@@ -10,7 +10,7 @@ import '../../common widgets/doctors_listtile.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage(this.user, {super.key});
-final User? user;
+  final User? user;
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _HomePageState();
 }
@@ -48,7 +48,10 @@ class _HomePageState extends ConsumerState<HomePage> {
                 width: 0.75.sw,
                 child: ListTile(
                   contentPadding: const EdgeInsets.all(0),
-                  title:  Text(widget.user?.displayName ?? '', style: ProjectConstants.headingNameTextStyle,),
+                  title: Text(
+                    widget.user?.displayName ?? '',
+                    style: ProjectConstants.headingNameTextStyle,
+                  ),
                   subtitle: SizedBox(
                     height: 40.h,
                     child: Row(
@@ -72,14 +75,22 @@ class _HomePageState extends ConsumerState<HomePage> {
               ),
               CircleAvatar(
                 radius: 30.r,
+                child: Image.asset(ProjectImages.profilePicture),
               )
             ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-               Text('Upcoming Schedule', style: ProjectConstants.regularBold,),
-              TextButton(onPressed: () {}, child:  Text('View all', style: ProjectConstants.regularBold.copyWith(fontSize: 10.sp)))
+              Text(
+                'Upcoming Schedule',
+                style: ProjectConstants.regularBold,
+              ),
+              TextButton(
+                  onPressed: () {},
+                  child: Text('View all',
+                      style: ProjectConstants.regularBold
+                          .copyWith(fontSize: 10.sp)))
             ],
           ),
           SizedBox(
@@ -94,11 +105,16 @@ class _HomePageState extends ConsumerState<HomePage> {
             ),
           ),
           SizedBox(
-            height: 0.023.sh,),
+            height: 0.023.sh,
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-               Text("Let’s find the doctor",style: ProjectConstants.regularBold.copyWith(color: const Color(0xFF1E1F2E)),),
+              Text(
+                "Let’s find the doctor",
+                style: ProjectConstants.regularBold
+                    .copyWith(color: const Color(0xFF1E1F2E)),
+              ),
               IconButton(
                   onPressed: () {},
                   icon: Transform.rotate(
@@ -117,8 +133,6 @@ class _HomePageState extends ConsumerState<HomePage> {
               ),
             ),
           )
-          // ListView()
-          // const Row(),
         ]),
       ),
     );

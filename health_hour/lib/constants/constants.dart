@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ProjectConstants {
-  //// This class is for constants like padding so we don't have too much boilerplate codes.
   ///The constants can be accessed by calling ProjectConstant.<name of constant>
 
   static const EdgeInsets generalPadding = EdgeInsets.all(24);
@@ -49,7 +48,7 @@ class ProjectConstants {
   static TextStyle regularColoredTitleText = ProjectConstants
       .regularWhiteTitleText
       .copyWith(color: ProjectColors.textColor);
-      
+
   static TextStyle regularColoredSubTitleText = ProjectConstants
       .regularWhiteSubTitleText
       .copyWith(color: ProjectColors.textColor);
@@ -63,19 +62,13 @@ class ProjectImages {
   static const String onboardingImage1 = 'assets/images/Onboarding1.png';
   static const String getStartedImage = 'assets/images/ImageGS.jpg';
   static const String contact = 'assets/images/Picture.png';
-//     static const String onboardingImage2 = 'assets/images/Group 3924.svg';
-//  static const String onboardingImage3 = 'assets/images/Group 3925.svg';
-//  static const String onboardingImage1 = 'assets/images/Group 3928.svg';
+  static const String profilePicture = 'assets/images/Ellipse 443.png';
+  static const String doctorProfilePicture =
+      'assets/images/Doctor Profile Photo.png';
 }
 
 class ProjectColors {
-  // Colors go in here , format for colors given next line
-  // static const Color grey = Color(0xff84838B);
-  // The colors can be accessed by calling ProjectColor.<name of color>
-
   static const Color primaryColor = Color(0xFF2F195A);
   static const Color textColor = Color(0xFF324F5E);
   static const Color alternateTextColor = Color(0xFF96A7AF);
-
-//  static const Color primaryGreen =  Color(0xFF99E79B);
 }

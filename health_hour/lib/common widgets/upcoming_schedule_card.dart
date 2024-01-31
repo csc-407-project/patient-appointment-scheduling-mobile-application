@@ -17,6 +17,11 @@ class UpcomingScheduleCard extends StatelessWidget {
       height: 0.225.sh,
       width: 0.8.sw,
       decoration: BoxDecoration(
+          gradient: const LinearGradient(
+              colors: [ProjectColors.primaryColor, Color(0xFF284179)],
+              begin: AlignmentDirectional(0, -3.6),
+              end: Alignment.bottomRight,
+              stops: [0.6, 0.95]),
           borderRadius: BorderRadius.circular(15.r),
           color: ProjectColors.primaryColor),
       child: Column(
@@ -24,14 +29,9 @@ class UpcomingScheduleCard extends StatelessWidget {
         children: [
           ListTile(
             leading: const CircleAvatar(),
-            title: Text(
-              name,
-              style: ProjectConstants.regularWhiteTitleText
-            ),
-            subtitle: Text(
-              specialization,
-              style:ProjectConstants.regularWhiteSubTitleText
-            ),
+            title: Text(name, style: ProjectConstants.regularWhiteTitleText),
+            subtitle: Text(specialization,
+                style: ProjectConstants.regularWhiteSubTitleText),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -39,14 +39,11 @@ class UpcomingScheduleCard extends StatelessWidget {
               SizedBox(
                 width: 0.5.sw,
                 child: ListTile(
-                  title: Text(
-                    date,
-                    style: ProjectConstants.regularWhiteSubTitleText.copyWith(fontSize: 12.sp, fontWeight: FontWeight.w500)
-                  ),
-                  subtitle: Text(
-                    time,
-                    style: ProjectConstants.regularWhiteSubTitleText
-                  ),
+                  title: Text(date,
+                      style: ProjectConstants.regularWhiteSubTitleText.copyWith(
+                          fontSize: 12.sp, fontWeight: FontWeight.w500)),
+                  subtitle: Text(time,
+                      style: ProjectConstants.regularWhiteSubTitleText),
                 ),
               ),
               IconButton(

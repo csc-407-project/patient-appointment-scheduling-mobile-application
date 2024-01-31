@@ -3,16 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:health_hour/features/auhtenticate/signin/landing_page.dart';
 import 'package:health_hour/features/onboarding/provider/onboarding_provider.dart';
 import 'package:health_hour/features/onboarding/views/onboarding_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+bool onBoarded = false;
 
 void main() async {
  
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   final sharedPreferences = await SharedPreferences.getInstance();
+  // onBoarded = sharedPreferences.getBool('onBoarded')?? false;
   runApp(ProviderScope(overrides: [
     sharedPreferencesProvider.overrideWithValue(sharedPreferences),
   ], child: const MyApp()));
@@ -43,7 +47,7 @@ class MyApp extends ConsumerWidget {
               textTheme: GoogleFonts.plusJakartaSansTextTheme(),
               useMaterial3: true,
             ),
-            home: const OnboardingPage(),
+            home: completed? const LandingPage(): const OnboardingPage(),
           );
         });
   }
