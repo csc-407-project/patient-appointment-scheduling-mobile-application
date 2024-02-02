@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,6 +8,7 @@ import 'package:health_hour/common%20widgets/app_textfield.dart';
 import 'package:health_hour/constants/constants.dart';
 import 'package:health_hour/features/auhtenticate/get_started_page.dart';
 import 'package:health_hour/features/auhtenticate/signup/signup_page.dart';
+import 'package:health_hour/features/home/bottom_navbar.dart';
 import 'package:health_hour/features/home/home_page.dart';
 
 class SignInPage extends ConsumerStatefulWidget {
@@ -63,10 +65,17 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                         .signInWithEmailAndPassword(
                             email: emailController.text,
                             password: passwordController.text)
+                            
                         .then((value) {
+                      //     final userq =FirebaseFirestore.instance
+                      // .collection('users').where('id', isEqualTo: value.user!.uid);
+                      // final userSnapshot =  userq.get();
+
+                      // print(userq.toString());
                         return Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
-                                builder: (context) =>  HomePage(value?.user)));
+                                builder: (context) =>  BottomNav(value.user)));
+                        
                       })
                     : null;
               },

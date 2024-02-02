@@ -1,7 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:health_hour/common%20widgets/doctor_home.dart';
+import 'package:health_hour/common%20widgets/student_home.dart';
+
 import 'package:health_hour/common%20widgets/upcoming_schedule_card.dart';
 import 'package:health_hour/constants/constants.dart';
 import 'package:health_hour/features/scheduling/book_doctor.dart';
@@ -16,18 +21,14 @@ class HomePage extends ConsumerStatefulWidget {
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
+  // final usersQuery = FirebaseFirestore.instance.collection('users').get();
+
+// }
+
   @override
   Widget build(BuildContext context) {
-    print(widget.user.toString());
-    List doctors = List.generate(
-        10,
-        (index) => DoctorsListTile(
-              name: 'Dr Ojo',
-              specialization: 'Dentist',
-              onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => const BookDoctor(),
-              )),
-            ));
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+
     List upcomingSchedule = List.generate(
         4,
         (index) => const UpcomingScheduleCard(
@@ -36,104 +37,30 @@ class _HomePageState extends ConsumerState<HomePage> {
             date: 'Friday, 5 Nov 2024',
             time: '09:00am - 11:00am'));
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(children: [
-          SizedBox(
-            height: 0.05.sh,
-          ),
-          Row(
-            children: [
-              SizedBox(
-                width: 0.75.sw,
-                child: ListTile(
-                  contentPadding: const EdgeInsets.all(0),
-                  title: Text(
-                    widget.user?.displayName ?? '',
-                    style: ProjectConstants.headingNameTextStyle,
-                  ),
-                  subtitle: SizedBox(
-                    height: 40.h,
-                    child: Row(
-                      children: [
-                        Container(
-                          height: 5.dg,
-                          width: 5.dg,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(50.r),
-                            color: Colors.green,
-                          ),
-                        ),
-                        SizedBox(
-                          width: 0.01.sw,
-                        ),
-                        const Text('Cupertino - Male, 25')
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              CircleAvatar(
-                radius: 30.r,
-                child: Image.asset(ProjectImages.profilePicture),
-              )
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Upcoming Schedule',
-                style: ProjectConstants.regularBold,
-              ),
-              TextButton(
-                  onPressed: () {},
-                  child: Text('View all',
-                      style: ProjectConstants.regularBold
-                          .copyWith(fontSize: 10.sp)))
-            ],
-          ),
-          SizedBox(
-            height: 0.23.sh,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemCount: upcomingSchedule.length,
-              itemBuilder: (context, index) => upcomingSchedule[index],
-              separatorBuilder: (context, index) => SizedBox(
-                width: 0.05.sw,
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 0.023.sh,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Let’s find the doctor",
-                style: ProjectConstants.regularBold
-                    .copyWith(color: const Color(0xFF1E1F2E)),
-              ),
-              IconButton(
-                  onPressed: () {},
-                  icon: Transform.rotate(
-                      angle: 20.4, child: const Icon(Icons.tune))),
-            ],
-          ),
-          Expanded(
-            child: ListView.separated(
-              itemCount: doctors.length,
-              // shrinkWrap: true,
-              itemBuilder: (context, index) {
-                return doctors[index];
-              },
-              separatorBuilder: (BuildContext context, int index) => SizedBox(
-                height: 16.h,
-              ),
-            ),
-          )
-        ]),
+      body: FutureBuilder(
+        future: users.doc(widget.user!.uid).get(),
+        builder: (BuildContext context,
+            AsyncSnapshot<DocumentSnapshot<Object?>> snapshot) {
+          if (snapshot.hasError) {
+            return const Text("Something went wrong");
+          }
+          if (snapshot.hasData && !snapshot.data!.exists) {
+            return const Text("Document does not exist");
+          }
+          if (snapshot.connectionState == ConnectionState.done) {
+            Map<String, dynamic> data =
+                snapshot.data!.data() as Map<String, dynamic>;
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: data['userType'] == 'Student'
+                  ? StudentHomePage(
+                      data: data, upcomingSchedule: upcomingSchedule)
+                  : DoctortHomePage(
+                      data: data, upcomingSchedule: upcomingSchedule),
+            );
+          }
+          return const Center(child: CircularProgressIndicator());
+        },
       ),
     );
   }

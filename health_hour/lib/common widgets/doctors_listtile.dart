@@ -19,7 +19,7 @@ class DoctorsListTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(10.r),
       ),
       title: Text(
-        name,
+        'Dr. $name',
         style: ProjectConstants.regularWhiteTitleText
             .copyWith(color: ProjectColors.textColor),
       ),

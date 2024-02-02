@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
+
 import 'package:health_hour/common%20widgets/app_button.dart';
 import 'package:health_hour/constants/constants.dart';
 import 'package:health_hour/features/auhtenticate/signup/signup_page.dart';

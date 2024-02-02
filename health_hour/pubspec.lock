@@ -209,6 +209,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.10.0"
+  firebase_ui_firestore:
+    dependency: "direct main"
+    description:
+      name: firebase_ui_firestore
+      sha256: "4272342419605d90ad8de6bc64d02fdf01cda7cd79d36d5906bacf894a70eff9"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.6.1"
+  firebase_ui_localizations:
+    dependency: transitive
+    description:
+      name: firebase_ui_localizations
+      sha256: "7029d9bce8365840957f4d1e3a7f938e893789da2071504d4f3b7eaa31f12fea"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.10.1"
+  firebase_ui_shared:
+    dependency: transitive
+    description:
+      name: firebase_ui_shared
+      sha256: f1d07c130a39104d32fba1dab274b7bcb13be2bf4e652624a4ccabb58f9781f1
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.4.1"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -222,6 +246,11 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.3"
+  flutter_localizations:
+    dependency: transitive
+    description: flutter
+    source: sdk
+    version: "0.0.0"
   flutter_native_splash:
     dependency: "direct main"
     description:
@@ -246,14 +275,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.9.0"
-  flutter_svg:
-    dependency: "direct main"
-    description:
-      name: flutter_svg
-      sha256: d39e7f95621fc84376bc0f7d504f05c3a41488c562f4a8ad410569127507402c
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.9"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -368,14 +389,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.8.3"
-  path_parsing:
-    dependency: transitive
-    description:
-      name: path_parsing
-      sha256: e3e67b1629e6f7e8100b367d3db6ba6af4b1f0bb80f64db18ef1fbabd2fa9ccf
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.1"
   path_provider:
     dependency: transitive
     description:
@@ -621,30 +634,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.2"
-  vector_graphics:
-    dependency: transitive
-    description:
-      name: vector_graphics
-      sha256: "18f6690295af52d081f6808f2f7c69f0eed6d7e23a71539d75f4aeb8f0062172"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.9+2"
-  vector_graphics_codec:
-    dependency: transitive
-    description:
-      name: vector_graphics_codec
-      sha256: "531d20465c10dfac7f5cd90b60bbe4dd9921f1ec4ca54c83ebb176dbacb7bb2d"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.9+2"
-  vector_graphics_compiler:
-    dependency: transitive
-    description:
-      name: vector_graphics_compiler
-      sha256: "03012b0a33775c5530576b70240308080e1d5050f0faf000118c20e6463bc0ad"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.9+2"
   vector_math:
     dependency: transitive
     description:

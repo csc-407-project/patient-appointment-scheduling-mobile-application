@@ -7,6 +7,7 @@ import 'package:health_hour/common%20widgets/app_button.dart';
 import 'package:health_hour/common%20widgets/app_textfield.dart';
 import 'package:health_hour/constants/constants.dart';
 import 'package:health_hour/features/auhtenticate/signin/signin_page.dart';
+import 'package:health_hour/features/home/bottom_navbar.dart';
 import 'package:health_hour/features/home/home_page.dart';
 
 class SignUpPage extends ConsumerStatefulWidget {
@@ -20,6 +21,8 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController specializationController =
+      TextEditingController();
   final firebase = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
@@ -64,6 +67,18 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
               prefixIcon: Icons.lock_outline,
               suffixIcon: Icons.remove_red_eye,
             ),
+            widget.userType == 'Doctor'
+                ? SizedBox(
+                    height: 0.026.sh,
+                  )
+                : const SizedBox.shrink(),
+            widget.userType == 'Doctor'
+                ? AppTextField(
+                    controller: specializationController,
+                    label: 'Specialization',
+                    prefixIcon: Icons.medical_information,
+                  )
+                : const SizedBox.shrink(),
             SizedBox(
               height: 0.026.sh,
             ),
@@ -77,18 +92,30 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                   User? user = result.user;
                   await user!.updateDisplayName(nameController.text);
                   await user.reload();
-
-                  DocumentReference users =
-                      FirebaseFirestore.instance.doc('users/${user.uid}');
+DocumentReference users = FirebaseFirestore.instance.doc('users/${user.uid}');
+                  // DocumentReference users = widget.userType == 'Doctor'
+                  //     ? FirebaseFirestore.instance.doc('doctors/${user.uid}')
+                  //     : FirebaseFirestore.instance.doc('students/${user.uid}');
                   await users.set({
                     'fullName': nameController.text,
                     'id': user.uid,
                     'email': user.email,
-                    'userType': widget.userType
-                  }).then((value) => Navigator.of(context).pushReplacement(
+                    'userType': widget.userType,
+                     'specialization'
+                        : specializationController.text,
+                    // specializationController.text.isNotEmpty
+                    
+                    //     ? 'specialization'
+                    //     : specializationController.text: null,
+                  }).then((value) {
+                    final userq =FirebaseFirestore.instance
+                      .collection('users').where('id', isEqualTo: firebase.currentUser!.uid);
+                      print(userq);
+                    return Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
                           builder: (context) =>
-                              HomePage(firebase.currentUser))));
+                              BottomNav(firebase.currentUser)));
+                  });
                 }
               },
               child: const Text(
@@ -96,7 +123,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
               ),
             ),
             SizedBox(
-              height: 0.3.sh,
+              height: 0.18.sh,
             ),
             Row(
               // mainAxisAlignment: MainAxisAlignment.center,

@@ -7,8 +7,10 @@ import 'package:health_hour/constants/constants.dart';
 import 'package:health_hour/features/scheduling/confirm_appointment.dart';
 
 class BookDoctor extends ConsumerStatefulWidget {
-  const BookDoctor({super.key});
-
+  const BookDoctor(this.doctor,   {super.key, });
+// final String name;
+// final String specialization;
+final Map<String, dynamic> doctor;
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
       _ScheduleAppointmentPageState();
@@ -61,11 +63,11 @@ class _ScheduleAppointmentPageState extends ConsumerState<BookDoctor> {
                     child: ListTile(
                       contentPadding: const EdgeInsets.all(0),
                       title: Text(
-                        'Dr. Kemi Owo',
+                       'Dr. ${widget.doctor['fullName']}',
                         style: ProjectConstants.regularColoredTitleText,
                       ),
                       subtitle: Text(
-                        'Cardiologist and Surgeon',
+                        widget.doctor['specialization'],
                         style: ProjectConstants.regularColoredSubTitleText
                             .copyWith(fontSize: 9.sp),
                       ),
@@ -114,12 +116,12 @@ class _ScheduleAppointmentPageState extends ConsumerState<BookDoctor> {
               Align(
                   alignment: Alignment.topLeft,
                   child: Text(
-                    'About me',
+                    'About',
                     style: ProjectConstants.regularColoredTitleText
                         .copyWith(fontWeight: FontWeight.w500),
                   )),
                Text(
-                'Dr. Ali Uzair is the top most cardiologist specialist in Crist Hospital in London, UK. He achived several awards for her wonderful contribution.',
+                'Dr. ${widget.doctor['fullName']} is one of the top ${widget.doctor['specialization']} specialist in the country.They have achived several awards for their wonderful contribution.',
                 style:ProjectConstants.regularColoredSubTitleText
                             .copyWith(fontSize: 10.sp) ,
               ),
