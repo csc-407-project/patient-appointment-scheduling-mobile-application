@@ -2,20 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:group_button/group_button.dart';
+import 'package:health_hour/features/auhtenticate/signup/signup_page.dart';
+import 'package:health_hour/features/home/bottom_navbar.dart';
+import 'package:health_hour/features/onboarding/model/appointment_model.dart';
 import 'package:table_calendar/table_calendar.dart';
-
 import '../../common widgets/app_button.dart';
 import '../../constants/constants.dart';
 
 class ConfirmAppointment extends ConsumerStatefulWidget {
-  const ConfirmAppointment({super.key});
-
+  const ConfirmAppointment(
+      {super.key, required this.doctor, required this.user});
+  final Map<String, dynamic> doctor;
+  final Map<String, dynamic> user;
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
       _ConfirmAppointmentState();
 }
 
 class _ConfirmAppointmentState extends ConsumerState<ConfirmAppointment> {
+  DateTime _focusedDay = DateTime.now();
+  DateTime? _selectedDay;
+  String? selectedTime;
+  String? formattedDate;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,9 +70,15 @@ class _ConfirmAppointmentState extends ConsumerState<ConfirmAppointment> {
                       width: 0.9.sw,
                       child: ListTile(
                         contentPadding: const EdgeInsets.all(0),
-                        title:  Text('Dr. Kemi Owo', style:ProjectConstants.regularColoredTitleText,),
-                        subtitle:  Text('Cardiologist and Surgeon', style: ProjectConstants.regularColoredSubTitleText
-                            .copyWith(fontSize: 9.sp),),
+                        title: Text(
+                          'Dr. ${widget.doctor['fullName']}',
+                          style: ProjectConstants.regularColoredTitleText,
+                        ),
+                        subtitle: Text(
+                          widget.doctor['specialization'],
+                          style: ProjectConstants.regularColoredSubTitleText
+                              .copyWith(fontSize: 9.sp),
+                        ),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -79,20 +93,49 @@ class _ConfirmAppointmentState extends ConsumerState<ConfirmAppointment> {
                     ),
                   ],
                 ),
-          
-                 Align(
-                    alignment: Alignment.topLeft, child: Text('Appointment', style:ProjectConstants.regularColoredSubTitleText.copyWith(fontSize: 12.sp,fontWeight: FontWeight.w400),)),
+
+                Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      'Appointment',
+                      style: ProjectConstants.regularColoredSubTitleText
+                          .copyWith(
+                              fontSize: 12.sp, fontWeight: FontWeight.w400),
+                    )),
                 Card(
                   color: Colors.white,
                   child: TableCalendar(
                     rowHeight: 0.05.sh,
                     calendarFormat: CalendarFormat.week,
+                    focusedDay: _selectedDay ?? _focusedDay,
+                    currentDay: DateTime.now(),
                     headerStyle: const HeaderStyle(
                       formatButtonVisible: false,
                     ),
-                    focusedDay: DateTime.now(),
-                    firstDay: DateTime.now().subtract(const Duration(days: 500)),
+                    firstDay:
+                        DateTime.now().subtract(const Duration(days: 500)),
                     lastDay: DateTime.now().add(const Duration(days: 1500)),
+                    selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+                    onDaySelected: (selectedDay, focusedDay) {
+                      if (!isSameDay(_selectedDay, selectedDay)) {
+                        setState(() {
+                          _selectedDay = selectedDay;
+                          _focusedDay = focusedDay;
+                          
+                        });
+                      }
+                    },
+                    calendarStyle: CalendarStyle(
+                      // todayDecoration: const BoxDecoration(color: ProjectColors.purple),
+                      selectedDecoration: BoxDecoration(
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      markerDecoration: BoxDecoration(
+                          color: ProjectColors.primaryColor,
+                          shape: BoxShape.rectangle,
+                          borderRadius: BorderRadius.circular(20)),
+                      markerSize: 6,
+                    ),
                   ),
                 ),
                 SizedBox(
@@ -107,37 +150,89 @@ class _ConfirmAppointmentState extends ConsumerState<ConfirmAppointment> {
                   scrollDirection: Axis.horizontal,
                   child: GroupButton(
                     isRadio: true,
-                    options:  GroupButtonOptions(
-                      buttonHeight: 0.04.sh,
-                      groupingType: GroupingType.row,
-                      borderRadius: BorderRadius.all(Radius.circular(11.r))
-                    ),
-                    onSelected: (value, index, isSelected) =>
-                        debugPrint('$index button is selected, value is $value'),
-                    buttons: const ["12:00", "13:00", "14:30", "18:00", "19:00", "21:40"],
+                    options: GroupButtonOptions(
+                        buttonHeight: 0.04.sh,
+                        groupingType: GroupingType.row,
+                        borderRadius: BorderRadius.all(Radius.circular(11.r))),
+                    onSelected: (value, index, isSelected) {
+                      setState(() {
+                        selectedTime = value;
+                      });
+                    },
+                    buttons: const [
+                      "09:00",
+                      "09:30",
+                      "10:30",
+                      "11:00",
+                      "11:30",
+                      "12:00",
+                      "12:30",
+                      "13:00",
+                      "13:30",
+                      "14:00",
+                      "14:30",
+                      "15:00",
+                      "15:30",
+                    ],
                   ),
                 ),
                 SizedBox(
                   height: 0.025.sh,
                 ),
                 AppButton(
-                    onPressed: () {
-                     showDialog(context: context, builder: (context) =>  AlertDialog(
-                      backgroundColor: Colors.white,
-                      content: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Align(
-                            alignment: Alignment.topRight,
-                            child: IconButton(onPressed: (){}, icon: const Icon(Icons.close))),
-                          const CircleAvatar(backgroundColor: ProjectColors.primaryColor,child: const Icon(Icons.check, color: Colors.white,),),
-                          SizedBox(
-                  height: 0.025.sh,
-                ),
-                          const Text('Your appointment has been booked successfully', textAlign: TextAlign.center,),
-                        ],
-                      ),
-                     ),);
+                    onPressed: () async {
+                      await appointmemntRef
+                          .add(
+                            Appointment(
+                              patientName: widget.user['fullName'],
+                              patientId: widget.user['id'],
+                              doctorName: widget.doctor['fullName'],
+                              doctorId: widget.doctor['id'],
+                              date: '$_selectedDay',
+                              time: selectedTime!,
+                              specialization: widget.doctor['specialization'],
+                            ),
+                          )
+                          .then(
+                            (value) => showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                backgroundColor: Colors.white,
+                                content: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                              
+                                    const CircleAvatar(
+                                      backgroundColor:
+                                          ProjectColors.primaryColor,
+                                      child: Icon(
+                                        Icons.check,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 0.025.sh,
+                                    ),
+                                    const Text(
+                                      'Your appointment has been booked successfully',
+                                      textAlign: TextAlign.center,
+                                    ),
+
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      BottomNav(firebase
+                                                          .currentUser!)));
+                                        },
+                                        child: const Text('Go back home'))
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
                     },
                     child: const Text('Confirm'))
               ]),

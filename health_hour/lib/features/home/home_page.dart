@@ -1,17 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:health_hour/common%20widgets/doctor_home.dart';
 import 'package:health_hour/common%20widgets/student_home.dart';
 
 import 'package:health_hour/common%20widgets/upcoming_schedule_card.dart';
-import 'package:health_hour/constants/constants.dart';
-import 'package:health_hour/features/scheduling/book_doctor.dart';
 
-import '../../common widgets/doctors_listtile.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage(this.user, {super.key});
@@ -31,7 +26,7 @@ class _HomePageState extends ConsumerState<HomePage> {
 
     List upcomingSchedule = List.generate(
         4,
-        (index) => const UpcomingScheduleCard(
+      (index) => const UpcomingScheduleCard(
             name: 'Dr. Lawal',
             specialization: 'Dentist',
             date: 'Friday, 5 Nov 2024',

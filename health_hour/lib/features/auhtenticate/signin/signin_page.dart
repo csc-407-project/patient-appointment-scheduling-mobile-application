@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,10 +6,9 @@ import 'package:health_hour/common%20widgets/app_button.dart';
 import 'package:health_hour/common%20widgets/app_textfield.dart';
 import 'package:health_hour/constants/constants.dart';
 import 'package:health_hour/features/auhtenticate/get_started_page.dart';
-import 'package:health_hour/features/auhtenticate/signup/signup_page.dart';
 import 'package:health_hour/features/home/bottom_navbar.dart';
-import 'package:health_hour/features/home/home_page.dart';
 
+ User? currentUser;
 class SignInPage extends ConsumerStatefulWidget {
   const SignInPage({super.key});
 
@@ -72,6 +70,7 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                       // final userSnapshot =  userq.get();
 
                       // print(userq.toString());
+                      currentUser = value.user;
                         return Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
                                 builder: (context) =>  BottomNav(value.user)));

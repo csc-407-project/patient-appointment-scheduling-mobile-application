@@ -1,10 +1,12 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:health_hour/common%20widgets/doctors_listtile.dart';
+import 'package:health_hour/common%20widgets/upcoming_schedule_card.dart';
 import 'package:health_hour/constants/constants.dart';
+import 'package:health_hour/features/auhtenticate/signup/signup_page.dart';
+import 'package:health_hour/features/onboarding/model/appointment_model.dart';
 import 'package:health_hour/features/scheduling/book_doctor.dart';
 
 class StudentHomePage extends StatelessWidget {
@@ -60,7 +62,6 @@ class StudentHomePage extends StatelessWidget {
           )
         ],
       ),
-     
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -71,20 +72,27 @@ class StudentHomePage extends StatelessWidget {
           TextButton(
               onPressed: () {},
               child: Text('View all',
-                  style: ProjectConstants.regularBold
-                      .copyWith(fontSize: 10.sp)))
+                  style:
+                      ProjectConstants.regularBold.copyWith(fontSize: 10.sp)))
         ],
       ),
       SizedBox(
         height: 0.23.sh,
-        child: ListView.separated(
-          scrollDirection: Axis.horizontal,
-          itemCount: upcomingSchedule.length,
-          itemBuilder: (context, index) => upcomingSchedule[index],
-          separatorBuilder: (context, index) => SizedBox(
-            width: 0.05.sw,
-          ),
-        ),
+        child: FirestoreListView(
+            scrollDirection: Axis.horizontal,
+            query: appointmemntRef.where('patientId',
+                isEqualTo: firebase.currentUser?.uid),
+            itemBuilder: (context, snapshot) {
+              Appointment appointment = snapshot.data();
+              return Padding(
+                padding: const EdgeInsets.only(left: 16),
+                child: UpcomingScheduleCard(
+                    name: 'Dr.${appointment.doctorName}',
+                    specialization: appointment.specialization,
+                    date: appointment.date,
+                    time: appointment.time),
+              );
+            }),
       ),
       SizedBox(
         height: 0.023.sh,
@@ -99,8 +107,8 @@ class StudentHomePage extends StatelessWidget {
           ),
           IconButton(
               onPressed: () {},
-              icon: Transform.rotate(
-                  angle: 20.4, child: const Icon(Icons.tune))),
+              icon:
+                  Transform.rotate(angle: 20.4, child: const Icon(Icons.tune))),
         ],
       ),
       Expanded(
@@ -108,26 +116,27 @@ class StudentHomePage extends StatelessWidget {
             height: 0.23.sh,
             child: FirestoreListView<Map<String, dynamic>>(
               showFetchingIndicator: true,
-              query: FirebaseFirestore.instance
-                  .collection('users').where('userType', isEqualTo: 'Doctor') // Access users collection
-              ,
-              // usersQuery,
+              query: FirebaseFirestore.instance.collection('users').where(
+                  'userType',
+                  isEqualTo: 'Doctor') ,
               itemBuilder: (context, snapshot) {
-                Map<String, dynamic> data = snapshot.data();
+                Map<String, dynamic> doctorData = snapshot.data();
 
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: DoctorsListTile(
-                    name:data['fullName'] ?? '' ,
-                    specialization: data['specialization'] ?? '',
+                    name: doctorData['fullName'] ?? '',
+                    specialization: doctorData['specialization'] ?? '',
                     onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) =>  BookDoctor(data, ),
+                      builder: (context) => BookDoctor(
+                        doctor: doctorData,
+                        user: data,
+                      ),
                     )),
                   ),
                 );
               },
             )),
-      
       )
     ]);
   }

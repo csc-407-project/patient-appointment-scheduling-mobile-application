@@ -7,10 +7,11 @@ import 'package:health_hour/constants/constants.dart';
 import 'package:health_hour/features/scheduling/confirm_appointment.dart';
 
 class BookDoctor extends ConsumerStatefulWidget {
-  const BookDoctor(this.doctor,   {super.key, });
+  const BookDoctor({super.key, required this.doctor, required this.user});
 // final String name;
 // final String specialization;
-final Map<String, dynamic> doctor;
+  final Map<String, dynamic> doctor;
+  final Map<String, dynamic> user;
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
       _ScheduleAppointmentPageState();
@@ -63,7 +64,7 @@ class _ScheduleAppointmentPageState extends ConsumerState<BookDoctor> {
                     child: ListTile(
                       contentPadding: const EdgeInsets.all(0),
                       title: Text(
-                       'Dr. ${widget.doctor['fullName']}',
+                        'Dr. ${widget.doctor['fullName']}',
                         style: ProjectConstants.regularColoredTitleText,
                       ),
                       subtitle: Text(
@@ -120,17 +121,20 @@ class _ScheduleAppointmentPageState extends ConsumerState<BookDoctor> {
                     style: ProjectConstants.regularColoredTitleText
                         .copyWith(fontWeight: FontWeight.w500),
                   )),
-               Text(
+              Text(
                 'Dr. ${widget.doctor['fullName']} is one of the top ${widget.doctor['specialization']} specialist in the country.They have achived several awards for their wonderful contribution.',
-                style:ProjectConstants.regularColoredSubTitleText
-                            .copyWith(fontSize: 10.sp) ,
+                style: ProjectConstants.regularColoredSubTitleText
+                    .copyWith(fontSize: 10.sp),
               ),
               SizedBox(
                 height: 0.045.sh,
               ),
               AppButton(
                   onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const ConfirmAppointment())),
+                      builder: (context) => ConfirmAppointment(
+                            doctor: widget.doctor,
+                            user: widget.user,
+                          ))),
                   child: const Text('Book Appointment'))
             ]),
       ),

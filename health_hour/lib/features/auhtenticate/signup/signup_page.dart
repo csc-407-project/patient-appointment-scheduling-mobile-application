@@ -8,8 +8,8 @@ import 'package:health_hour/common%20widgets/app_textfield.dart';
 import 'package:health_hour/constants/constants.dart';
 import 'package:health_hour/features/auhtenticate/signin/signin_page.dart';
 import 'package:health_hour/features/home/bottom_navbar.dart';
-import 'package:health_hour/features/home/home_page.dart';
 
+ final firebase = FirebaseAuth.instance;
 class SignUpPage extends ConsumerStatefulWidget {
   const SignUpPage(this.userType, {super.key});
   final String userType;
@@ -23,7 +23,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController specializationController =
       TextEditingController();
-  final firebase = FirebaseAuth.instance;
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
