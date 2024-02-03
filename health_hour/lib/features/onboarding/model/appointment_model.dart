@@ -34,3 +34,13 @@ final appointmemntRef = FirebaseFirestore.instance.collection('appointments').wi
       fromFirestore: (snapshot, _) => Appointment.fromJson(snapshot.data()!),
       toFirestore: (appointment, _) => appointment.toJson(),
     );
+
+    CollectionReference appointments = FirebaseFirestore.instance.collection('appointments');
+
+Future<void> updateAppointment({ required String appointmentId, required Map<String, dynamic> status}) {
+  return appointments
+    .doc(appointmentId)
+    .update(status)
+    .then((value) => print("Appointment Updated"))
+    .catchError((error) => print("Failed to update user: $error"));
+}

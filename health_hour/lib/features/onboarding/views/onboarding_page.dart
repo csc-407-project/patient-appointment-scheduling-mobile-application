@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import 'package:google_fonts/google_fonts.dart';
 import 'package:health_hour/features/auhtenticate/get_started_page.dart';
 import 'package:health_hour/features/onboarding/provider/onboarding_provider.dart';
-
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-
 import '../../../common widgets/app_button.dart';
 import '../../../constants/constants.dart';
 import '../model/onboarding_model.dart';

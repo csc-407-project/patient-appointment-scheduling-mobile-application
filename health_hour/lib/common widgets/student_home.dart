@@ -9,7 +9,7 @@ import 'package:health_hour/features/auhtenticate/signup/signup_page.dart';
 import 'package:health_hour/features/onboarding/model/appointment_model.dart';
 import 'package:health_hour/features/scheduling/book_doctor.dart';
 
-class StudentHomePage extends StatelessWidget {
+class StudentHomePage extends StatefulWidget {
   const StudentHomePage({
     super.key,
     required this.data,
@@ -19,6 +19,11 @@ class StudentHomePage extends StatelessWidget {
   final Map<String, dynamic> data;
   final List upcomingSchedule;
 
+  @override
+  State<StudentHomePage> createState() => _StudentHomePageState();
+}
+
+class _StudentHomePageState extends State<StudentHomePage> {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
@@ -32,7 +37,7 @@ class StudentHomePage extends StatelessWidget {
             child: ListTile(
               contentPadding: const EdgeInsets.all(0),
               title: Text(
-                data['fullName'],
+                widget.data['fullName'],
                 style: ProjectConstants.headingNameTextStyle,
               ),
               subtitle: SizedBox(
@@ -62,37 +67,66 @@ class StudentHomePage extends StatelessWidget {
           )
         ],
       ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            'Upcoming Schedule',
-            style: ProjectConstants.regularBold,
-          ),
-          TextButton(
-              onPressed: () {},
-              child: Text('View all',
-                  style:
-                      ProjectConstants.regularBold.copyWith(fontSize: 10.sp)))
-        ],
+      FutureBuilder<bool>(
+        future: appointmemntRef
+            .where('patientId', isEqualTo: firebase.currentUser?.uid)
+            .snapshots()
+            .isEmpty,
+        builder: (context, snapshot) {
+         
+          if (snapshot.data == false) {
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Upcoming Schedule',
+                  style: ProjectConstants.regularBold,
+                ),
+                TextButton(
+                    onPressed: () {},
+                    child: Text('View all',
+                        style: ProjectConstants.regularBold
+                            .copyWith(fontSize: 10.sp)))
+              ],
+            );
+          } else {
+            return const SizedBox.shrink();
+            // Show UI for unsuccessful outcome
+          }
+        },
       ),
-      SizedBox(
-        height: 0.23.sh,
-        child: FirestoreListView(
-            scrollDirection: Axis.horizontal,
-            query: appointmemntRef.where('patientId',
-                isEqualTo: firebase.currentUser?.uid),
-            itemBuilder: (context, snapshot) {
-              Appointment appointment = snapshot.data();
-              return Padding(
-                padding: const EdgeInsets.only(left: 16),
-                child: UpcomingScheduleCard(
-                    name: 'Dr.${appointment.doctorName}',
-                    specialization: appointment.specialization,
-                    date: appointment.date,
-                    time: appointment.time),
-              );
-            }),
+      FutureBuilder<bool>(
+        future: appointmemntRef
+            .where('patientId', isEqualTo: firebase.currentUser?.uid)
+            .snapshots()
+            .isEmpty,
+        builder: (context, snapshot) {
+          if (snapshot.data == false) {
+            return SizedBox(
+              height: 0.23.sh,
+              child: FirestoreListView(
+                  scrollDirection: Axis.horizontal,
+                  query: appointmemntRef.where('patientId',
+                      isEqualTo: firebase.currentUser?.uid),
+                  itemBuilder: (context, snapshot) {
+                    Appointment appointment = snapshot.data();
+                    return Padding(
+                      padding: const EdgeInsets.only(left: 16),
+                      child: UpcomingScheduleCard(
+                          name: 'Dr.${appointment.doctorName}',
+                          specialization: appointment.specialization,
+                          date: appointment.date,
+                          time: appointment.time),
+                    );
+                  }),
+            );
+          } else {
+            return const SizedBox.shrink();
+           
+          }
+
+          // Show error UI
+        },
       ),
       SizedBox(
         height: 0.023.sh,
@@ -113,12 +147,12 @@ class StudentHomePage extends StatelessWidget {
       ),
       Expanded(
         child: SizedBox(
-            height: 0.23.sh,
+            // height: 0.23.sh,
             child: FirestoreListView<Map<String, dynamic>>(
               showFetchingIndicator: true,
-              query: FirebaseFirestore.instance.collection('users').where(
-                  'userType',
-                  isEqualTo: 'Doctor') ,
+              query: FirebaseFirestore.instance
+                  .collection('users')
+                  .where('userType', isEqualTo: 'Doctor'),
               itemBuilder: (context, snapshot) {
                 Map<String, dynamic> doctorData = snapshot.data();
 
@@ -130,7 +164,7 @@ class StudentHomePage extends StatelessWidget {
                     onTap: () => Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => BookDoctor(
                         doctor: doctorData,
-                        user: data,
+                        user: widget.data,
                       ),
                     )),
                   ),

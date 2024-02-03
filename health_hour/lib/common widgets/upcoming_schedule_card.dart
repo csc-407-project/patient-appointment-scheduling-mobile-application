@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:health_hour/constants/constants.dart';
+import 'package:intl/intl.dart';
 
 class UpcomingScheduleCard extends StatelessWidget {
   const UpcomingScheduleCard({
@@ -13,6 +14,8 @@ class UpcomingScheduleCard extends StatelessWidget {
   final String name, specialization, date, time;
   @override
   Widget build(BuildContext context) {
+     DateTime dateTime = DateTime.parse(date);
+  String  formattedDate =  DateFormat('EEEEEE, dd MMM yyyy').format(dateTime);
     return Container(
       height: 0.225.sh,
       width: 0.8.sw,
@@ -39,7 +42,7 @@ class UpcomingScheduleCard extends StatelessWidget {
               SizedBox(
                 width: 0.5.sw,
                 child: ListTile(
-                  title: Text(date,
+                  title: Text(formattedDate,
                       style: ProjectConstants.regularWhiteSubTitleText.copyWith(
                           fontSize: 12.sp, fontWeight: FontWeight.w500)),
                   subtitle: Text(time,

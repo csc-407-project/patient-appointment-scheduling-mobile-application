@@ -35,7 +35,7 @@ class DoctortHomePage extends StatelessWidget {
                 ),
                 contentPadding: const EdgeInsets.all(0),
                 title: Text(
-                  'Dr.${data['fullName']}',
+                  'Dr. ${data['fullName']}',
                   style: ProjectConstants.headingNameTextStyle,
                 ),
                 subtitle: Text(data['specialization'])),
@@ -72,9 +72,17 @@ class DoctortHomePage extends StatelessWidget {
                     patientName: appointment.patientName,
                     date: appointment.date,
                     time: appointment.time,
+                    id: snapshot.id,
                   ),
-                ));
+                ),);
           },
+          emptyBuilder: (context) => const Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.art_track_sharp, size: 150, color: ProjectColors.primaryColor,),
+              Text("You don't have any apppointments yet"),
+            ],
+          ),
         ),
       )
     ]);
@@ -86,9 +94,9 @@ class DoctorUpcScheduleCard extends StatelessWidget {
     super.key,
     required this.patientName,
     required this.date,
-    required this.time,
+    required this.time, required this.id,
   });
-  final String patientName, date, time;
+  final String patientName, date, time, id;
   @override
   Widget build(BuildContext context) {
     DateTime dateTime = DateTime.parse(date);
@@ -137,7 +145,7 @@ class DoctorUpcScheduleCard extends StatelessWidget {
                       //background: #FD6A6A;
                       minHeight: 40,
                       backgroundColor: const Color(0xFF36A692),
-                      onPressed: () {},
+                      onPressed: () async =>await  updateAppointment(appointmentId: id, status: {'status': 'approved'}, ),
                       child: Text(
                         'Approve',
                         style: ProjectConstants.regularWhiteSubTitleText
