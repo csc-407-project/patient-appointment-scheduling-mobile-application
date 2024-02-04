@@ -7,6 +7,7 @@ import 'package:health_hour/features/auhtenticate/signin/landing_page.dart';
 import 'package:health_hour/features/home/bottom_navbar.dart';
 import 'package:health_hour/features/onboarding/provider/onboarding_provider.dart';
 import 'package:health_hour/features/onboarding/views/onboarding_page.dart';
+import 'package:health_hour/services/notification_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -16,6 +17,8 @@ void main() async {
  
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  // Initialize local notification
+  setupLocalNotification();
   final sharedPreferences = await SharedPreferences.getInstance();
   // onBoarded = sharedPreferences.getBool('onBoarded')?? false;
   runApp(ProviderScope(overrides: [

@@ -5,42 +5,33 @@ import 'package:group_button/group_button.dart';
 import 'package:health_hour/features/auhtenticate/signup/signup_page.dart';
 import 'package:health_hour/features/home/bottom_navbar.dart';
 import 'package:health_hour/features/onboarding/model/appointment_model.dart';
-import 'package:health_hour/features/onboarding/model/notification_model.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../../common widgets/app_button.dart';
 import '../../constants/constants.dart';
-import 'package:intl/intl.dart';
 
-class ConfirmAppointment extends ConsumerStatefulWidget {
-  const ConfirmAppointment(
-      {super.key, required this.doctor, required this.user});
-  final Map<String, dynamic> doctor;
-  final Map<String, dynamic> user;
+class RescheduleAppointment extends ConsumerStatefulWidget {
+  const RescheduleAppointment(
+      {super.key, required this.appointment, required this.appointmentId, });
+final Appointment appointment;
+final String appointmentId;
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _ConfirmAppointmentState();
+      _RescheduleAppointmentState();
 }
 
-class _ConfirmAppointmentState extends ConsumerState<ConfirmAppointment> {
+class _RescheduleAppointmentState extends ConsumerState<RescheduleAppointment> {
   DateTime _focusedDay = DateTime.now();
-  DateTime? _selectedDay;
+    DateTime? _selectedDay;
   String? selectedTime;
   String? formattedDate;
   @override
   Widget build(BuildContext context) {
-    final now = DateTime.now();
-
-// Extract hour, minute, and AM/PM indicator
-    final hour = now.hour % 12; // Use modulo to get hour in 12-hour format
-    final minute = now.minute;
-    final period = now.hour >= 12 ? "pm" : "am";
-
-// Format the time string
-    final formattedTime =
-        "${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')} $period";
-
+  //  _selectedDay = DateTime.tryParse(widget.appointment.date);
+   
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
+      title: const Text('Reschedule Appointment', style: TextStyle(color: Colors.black, fontSize: 24),),
         leading: IconButton(
             onPressed: () => Navigator.pop(context),
             icon: const Icon(Icons.arrow_back_ios)),
@@ -84,14 +75,14 @@ class _ConfirmAppointmentState extends ConsumerState<ConfirmAppointment> {
                       child: ListTile(
                         contentPadding: const EdgeInsets.all(0),
                         title: Text(
-                          'Dr. ${widget.doctor['fullName']}',
+                          '${widget.appointment.patientName}',
                           style: ProjectConstants.regularColoredTitleText,
                         ),
-                        subtitle: Text(
-                          widget.doctor['specialization'],
-                          style: ProjectConstants.regularColoredSubTitleText
-                              .copyWith(fontSize: 9.sp),
-                        ),
+                        // subtitle: Text(
+                        //   widget.doctor['specialization'],
+                        //   style: ProjectConstants.regularColoredSubTitleText
+                        //       .copyWith(fontSize: 9.sp),
+                        // ),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -130,10 +121,11 @@ class _ConfirmAppointmentState extends ConsumerState<ConfirmAppointment> {
                     lastDay: DateTime.now().add(const Duration(days: 1500)),
                     selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
                     onDaySelected: (selectedDay, focusedDay) {
-                      if (!isSameDay(_selectedDay, selectedDay)) {
+                       if (!isSameDay(_selectedDay, selectedDay)) {
                         setState(() {
                           _selectedDay = selectedDay;
                           _focusedDay = focusedDay;
+                          
                         });
                       }
                     },
@@ -193,28 +185,7 @@ class _ConfirmAppointmentState extends ConsumerState<ConfirmAppointment> {
                 ),
                 AppButton(
                     onPressed: () async {
-                      await appointmemntRef.add(
-                        Appointment(
-                          patientName: widget.user['fullName'],
-                          patientId: widget.user['id'],
-                          doctorName: widget.doctor['fullName'],
-                          doctorId: widget.doctor['id'],
-                          date: '$_selectedDay',
-                          time: selectedTime!,
-                          specialization: widget.doctor['specialization'],
-                          status: 'pending',
-                        ),
-                      );
-                      await notificationRef
-                          .add(CustomNotification(
-                            content:
-                                'You just booked an appointment with Dr. ${widget.doctor['fullName']} for ${DateFormat('EEE, dd MMM').format(_selectedDay!)}, $selectedTime.',
-                            time: formattedTime,
-                            patientName: widget.user['fullName'],
-                            patientId: widget.user['id'],
-                            doctorName: widget.doctor['fullName'],
-                            doctorId: widget.doctor['id'],
-                          ))
+                        updateAppointment(appointmentId: widget.appointmentId, status: {'time': selectedTime, 'date': '$_selectedDay'}, )
                           .then(
                             (value) => showDialog(
                               context: context,
@@ -223,6 +194,7 @@ class _ConfirmAppointmentState extends ConsumerState<ConfirmAppointment> {
                                 content: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
+                              
                                     const CircleAvatar(
                                       backgroundColor:
                                           ProjectColors.primaryColor,
@@ -235,16 +207,17 @@ class _ConfirmAppointmentState extends ConsumerState<ConfirmAppointment> {
                                       height: 0.025.sh,
                                     ),
                                     const Text(
-                                      'Your appointment has been booked successfully',
+                                      'Appointment rescheduled successfully',
                                       textAlign: TextAlign.center,
                                     ),
+
                                     TextButton(
                                         onPressed: () {
                                           Navigator.pushReplacement(
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      BottomNav(user:firebase
+                                                      BottomNav(user: firebase
                                                           .currentUser!)));
                                         },
                                         child: const Text('Go back home'))

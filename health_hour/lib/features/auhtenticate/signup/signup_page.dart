@@ -114,7 +114,7 @@ DocumentReference users = FirebaseFirestore.instance.doc('users/${user.uid}');
                     return Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
                           builder: (context) =>
-                              BottomNav(firebase.currentUser)));
+                              BottomNav(user: firebase.currentUser)));
                   });
                 }
               },

@@ -4,6 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:health_hour/common%20widgets/app_button.dart';
 import 'package:health_hour/constants/constants.dart';
 import 'package:health_hour/features/onboarding/model/appointment_model.dart';
+import 'package:health_hour/features/onboarding/model/notification_model.dart';
+import 'package:health_hour/features/scheduling/reschedule_appointment.dart';
+import 'package:health_hour/services/notification_service.dart';
 import 'package:intl/intl.dart';
 import '../features/auhtenticate/signup/signup_page.dart';
 
@@ -19,7 +22,6 @@ class DoctortHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     return Column(children: [
       SizedBox(
         height: 0.05.sh,
@@ -65,21 +67,24 @@ class DoctortHomePage extends StatelessWidget {
           itemBuilder: (context, snapshot) {
             Appointment appointment = snapshot.data();
             return Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: SizedBox(
-                  height: 0.23.sh,
-                  child: DoctorUpcScheduleCard(
-                    patientName: appointment.patientName,
-                    date: appointment.date,
-                    time: appointment.time,
-                    id: snapshot.id,
-                  ),
-                ),);
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: SizedBox(
+                height: 0.23.sh,
+                child: DoctorUpcScheduleCard(
+                  appointment: appointment,
+                  appointmentId: snapshot.id,
+                ),
+              ),
+            );
           },
           emptyBuilder: (context) => const Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.art_track_sharp, size: 150, color: ProjectColors.primaryColor,),
+              Icon(
+                Icons.art_track_sharp,
+                size: 150,
+                color: ProjectColors.primaryColor,
+              ),
               Text("You don't have any apppointments yet"),
             ],
           ),
@@ -92,16 +97,30 @@ class DoctortHomePage extends StatelessWidget {
 class DoctorUpcScheduleCard extends StatelessWidget {
   const DoctorUpcScheduleCard({
     super.key,
-    required this.patientName,
-    required this.date,
-    required this.time, required this.id,
+    required this.appointment,
+    required this.appointmentId,
   });
-  final String patientName, date, time, id;
+  final Appointment appointment;
+
+  final String appointmentId;
+
   @override
   Widget build(BuildContext context) {
-    DateTime dateTime = DateTime.parse(date);
-  String  formattedDate =
-                              DateFormat('EEE, dd MMM').format(dateTime);
+    DateTime dateTime = DateTime.parse(appointment.date);
+    String formattedDate = DateFormat('EEE, dd MMM').format(dateTime);
+    final now = DateTime.now();
+
+// Extract hour, minute, and AM/PM indicator
+    final hour = now.hour % 12; // Use modulo to get hour in 12-hour format
+    final minute = now.minute;
+    final period = now.hour >= 12 ? "pm" : "am";
+
+// Format the time string
+    final formattedTime =
+        "${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')} $period";
+
+// Output: e.g., 02:20 pm
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -123,8 +142,8 @@ class DoctorUpcScheduleCard extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(patientName),
-                    Text('$formattedDate | $time AM'),
+                    Text(appointment.patientName),
+                    Text('$formattedDate | ${appointment.time} AM'),
                   ],
                 ),
               ],
@@ -139,36 +158,91 @@ class DoctorUpcScheduleCard extends StatelessWidget {
               // mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
+                appointment.status == 'approved'
+                    ? const SizedBox.shrink()
+                    : SizedBox(
+                        width:
+                            appointment.status == 'approved' ? 0.3.sw : 0.25.sw,
+                        child: AppButton(
+                            //background: #FD6A6A;
+                            minHeight: 40,
+                            backgroundColor: const Color(0xFF36A692),
+                            onPressed: () async {
+                              await updateAppointment(
+                                appointmentId: appointmentId,
+                                status: {'status': 'approved'},
+                              );
+                              await notificationRef.add(CustomNotification(
+                                  content:
+                                      'Dr. ${appointment.doctorName} accepted your booking request for $formattedDate .',
+                                  time: formattedTime,
+                                  patientName: appointment.patientName,
+                                  patientId: appointment.patientId,
+                                  doctorName: appointment.doctorName,
+                                  doctorId: appointment.doctorId));
+                            },
+                            child: Text(
+                              'Approve',
+                              style: ProjectConstants.regularWhiteSubTitleText
+                                  .copyWith(fontSize: 10.sp),
+                            )),
+                      ),
                 SizedBox(
-                  width: 0.25.sw,
-                  child: AppButton(
-                      //background: #FD6A6A;
-                      minHeight: 40,
-                      backgroundColor: const Color(0xFF36A692),
-                      onPressed: () async =>await  updateAppointment(appointmentId: id, status: {'status': 'approved'}, ),
-                      child: Text(
-                        'Approve',
-                        style: ProjectConstants.regularWhiteSubTitleText
-                            .copyWith(fontSize: 10.sp),
-                      )),
-                ),
-                SizedBox(
-                  width: 0.25.sw,
+                  width: 0.3.sw,
                   child: AppButton(
                       minHeight: 40,
                       backgroundColor: const Color(0xFFFD6A6A),
-                      onPressed: () {},
+                      onPressed: () async{
+                      await  appointmemntRef
+                            .doc(appointmentId)
+                            .delete()
+                            .then((value) => print("Appointment Deleted"))
+                            .catchError((error) =>
+                                print("Failed to delete user: $error")).then((value) => showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                backgroundColor: Colors.white,
+                                content: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const CircleAvatar(
+                                      backgroundColor:
+                                          ProjectColors.primaryColor,
+                                      child: Icon(
+                                        Icons.check,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 0.025.sh,
+                                    ),
+                                    const Text(
+                                      'Your appointment has been cancelled successfully',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    TextButton(
+                                        onPressed: ()=> Navigator.pop(context),
+                                        child: const Text('Ok'))
+                                  ],
+                                ),
+                              ),
+                            ),);
+                      },
                       child: Text(
                         'Cancel',
                         style: ProjectConstants.regularWhiteSubTitleText,
                       )),
                 ),
                 SizedBox(
-                  width: 0.25.sw,
+                  width: appointment.status == 'approved' ? 0.4.sw : 0.25.sw,
                   child: AppButton(
                       minHeight: 40,
                       backgroundColor: const Color(0xFF0E82FD),
-                      onPressed: () {},
+                      onPressed: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                              builder: (context) => RescheduleAppointment(
+                                  appointment: appointment,
+                                  appointmentId: appointmentId))),
                       child: Text(
                         'Reschedule',
                         maxLines: 1,

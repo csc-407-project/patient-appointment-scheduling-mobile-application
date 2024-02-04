@@ -6,6 +6,7 @@ import 'package:health_hour/common%20widgets/doctor_home.dart';
 import 'package:health_hour/common%20widgets/student_home.dart';
 
 import 'package:health_hour/common%20widgets/upcoming_schedule_card.dart';
+import 'package:health_hour/features/onboarding/model/appointment_model.dart';
 
 
 class HomePage extends ConsumerStatefulWidget {
@@ -22,7 +23,7 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
+    
 
     List upcomingSchedule = List.generate(
         4,

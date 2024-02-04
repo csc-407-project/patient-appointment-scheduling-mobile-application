@@ -23,7 +23,8 @@ class _LandingPageState extends ConsumerState<LandingPage> {
           if (snapshot.connectionState == ConnectionState.active) {
             final user = snapshot.data;
             if (user?.uid != null) {
-              return  BottomNav(snapshot.data);
+              final userdata = getUserData(user?.uid);
+              return  BottomNav(user:user, );
             } else {
               return const SignInPage(
                 

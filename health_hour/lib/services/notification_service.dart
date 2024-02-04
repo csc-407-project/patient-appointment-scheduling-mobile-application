@@ -1,77 +1,76 @@
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:timezone/data/latest.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
 
-class NotificationService {
-  //instance of FlutterLocalNotificationsPlugin
+void setupLocalNotification() async {
+  // Request for permission for IOS.
+  await FirebaseMessaging.instance.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: false,
+    provisional: false,
+    sound: true,
+  );
+
+  // Enable foreground notifications for IOS
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+    alert: true, // Required to display a heads up notification
+    badge: true,
+    sound: true,
+  );
+
+  // Enable foreground notifications for android
+  const AndroidNotificationChannel channel = AndroidNotificationChannel(
+    'high_importance_channel', // id
+    'High Importance Notifications', // title
+    description: 'This channel is used for important notifications.', // description
+    importance: Importance.max,
+  );
+
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+  FlutterLocalNotificationsPlugin();
 
-  Future<void> init() async {
+  // For android
+  await flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+      ?.createNotificationChannel(channel);
 
+  // For IOS
+  await flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
+      ?.requestPermissions(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
 
-    await flutterLocalNotificationsPlugin.initialize(const InitializationSettings(
+  await flutterLocalNotificationsPlugin.initialize(InitializationSettings(
       android: AndroidInitializationSettings('app_icon'),
       iOS: DarwinInitializationSettings(),
-    ));
+  ));
 
+  // Listen for foreground message
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    RemoteNotification? notification = message.notification;
+    AndroidNotification? android = message.notification?.android;
 
-    tz.initializeTimeZones();
-
-
-  }
-
-  onSelectNotification(String? payload) async {
-    //Navigate to wherever you want
-  }
-
-  requestIOSPermissions() {
-    flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-            IOSFlutterLocalNotificationsPlugin>()
-        ?.requestPermissions(
-          alert: true,
-          badge: true,
-          sound: true,
-        );
-  }
-
-  Future<void> showNotifications({id, title, body, payload}) async {
-
-    const AndroidNotificationDetails androidPlatformChannelSpecifics =
-        AndroidNotificationDetails('your channel id', 'your channel name',
-            channelDescription: 'your channel description',
-            importance: Importance.max,
-            priority: Priority.high,
-            ticker: 'ticker');
-
-    const NotificationDetails platformChannelSpecifics =
-        NotificationDetails(android: androidPlatformChannelSpecifics);
-
-    await flutterLocalNotificationsPlugin
-        .show(id, title, body, platformChannelSpecifics, payload: payload);
-
-  }
-
-  Future<void> scheduleNotifications({id, title, body, time}) async {
-    try {
-      await flutterLocalNotificationsPlugin.zonedSchedule(
-          id,
-          title,
-          body,
-          tz.TZDateTime.from(time, tz.local),
-          //tz.TZDateTime.now(local).toDateTimeRange(DateTime(2023, 1, 31)),
-          const NotificationDetails(
+    // If `onMessage` is triggered with a notification, construct our own
+    // local notification to show to users using the created channel.
+    if (notification != null && android != null) {
+      flutterLocalNotificationsPlugin.show(
+          notification.hashCode,
+          notification.title,
+          notification.body,
+          NotificationDetails(
               android: AndroidNotificationDetails(
-                  'your channel id', 'your channel name',
-                  channelDescription: 'your channel description')),
-          androidAllowWhileIdle: true,
-          uiLocalNotificationDateInterpretation:
-              UILocalNotificationDateInterpretation.absoluteTime,
-      matchDateTimeComponents: DateTimeComponents.time);
-    } catch (e) {
-      print(e);
+                  channel.id,
+                  channel.name,
+                  channelDescription: channel.description,
+                  icon: android.smallIcon
+              )
+          ));
     }
-  }
+  });
 }

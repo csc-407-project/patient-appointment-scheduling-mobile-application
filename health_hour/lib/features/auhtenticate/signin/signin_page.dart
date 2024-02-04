@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,8 +10,15 @@ import 'package:health_hour/common%20widgets/app_textfield.dart';
 import 'package:health_hour/constants/constants.dart';
 import 'package:health_hour/features/auhtenticate/get_started_page.dart';
 import 'package:health_hour/features/home/bottom_navbar.dart';
+import 'package:health_hour/features/onboarding/model/appointment_model.dart';
 
  User? currentUser;
+ getUserData(String? id) async {
+   final _userData = await  users.doc(id).get();
+   print(_userData.data().toString());
+//  Map<String, dynamic> userData = jsonDecode('${_userData.data().toString()}');
+   return _userData;
+  }
 class SignInPage extends ConsumerStatefulWidget {
   const SignInPage({super.key});
 
@@ -19,6 +29,8 @@ class SignInPage extends ConsumerStatefulWidget {
 class _SignInPageState extends ConsumerState<SignInPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,26 +69,25 @@ class _SignInPageState extends ConsumerState<SignInPage> {
             ),
             AppButton(
               onPressed: () async {
-                emailController.text.isNotEmpty &&
-                        passwordController.text.isNotEmpty
-                    ? await FirebaseAuth.instance
+                if ( emailController.text.isNotEmpty &&
+                        passwordController.text.isNotEmpty) {
+                  final user = await FirebaseAuth.instance
                         .signInWithEmailAndPassword(
                             email: emailController.text,
-                            password: passwordController.text)
-                            
-                        .then((value) {
-                      //     final userq =FirebaseFirestore.instance
-                      // .collection('users').where('id', isEqualTo: value.user!.uid);
-                      // final userSnapshot =  userq.get();
-
-                      // print(userq.toString());
-                      currentUser = value.user;
+                            password: passwordController.text);
+                             currentUser = user.user;
+                             await getUserData(currentUser!.uid).then((value) {
+              
+                     
+                     
                         return Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
-                                builder: (context) =>  BottomNav(value.user)));
+                                builder: (context) =>  BottomNav(user:currentUser,)));
                         
-                      })
-                    : null;
+                      });
+                }
+               
+                   
               },
               child: const Text('Sign In'),
             ),

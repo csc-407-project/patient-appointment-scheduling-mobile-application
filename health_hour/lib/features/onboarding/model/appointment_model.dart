@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+
+CollectionReference users = FirebaseFirestore.instance.collection('users');
 class Appointment {
-  Appointment(  {required this.date, required this.specialization, required this.patientName, required this.patientId,required this.doctorName,required this.doctorId,required this.time,});
+  Appointment(  {required this.status, required this.date, required this.specialization, required this.patientName, required this.patientId,required this.doctorName,required this.doctorId,required this.time,});
 
   Appointment.fromJson(Map<String, Object?> json)
     : this(
@@ -12,9 +14,10 @@ class Appointment {
         doctorName: json['doctorName']! as String,
         date: json['date']! as String,
         specialization: json['specialization']! as String,
+         status: json['status']! as String,
       );
 
-  final String patientName, patientId, doctorName, doctorId, time, date, specialization;
+  final String patientName, patientId, doctorName, doctorId, time, date, specialization, status;
  
 
   Map<String, Object?> toJson() {
@@ -26,6 +29,7 @@ class Appointment {
       'doctorName': doctorName,
       'date': date,
       'specialization': specialization,
+      'status': status,
     };
   }
 }
