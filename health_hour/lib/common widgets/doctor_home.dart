@@ -15,11 +15,11 @@ class DoctortHomePage extends StatelessWidget {
   const DoctortHomePage({
     super.key,
     required this.data,
-    required this.upcomingSchedule,
+   
   });
 
   final Map<String, dynamic> data;
-  final List upcomingSchedule;
+  
 
   @override
   Widget build(BuildContext context) {

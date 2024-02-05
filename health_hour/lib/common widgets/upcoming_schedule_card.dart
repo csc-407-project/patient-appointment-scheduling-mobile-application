@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:health_hour/constants/constants.dart';
+import 'package:health_hour/features/onboarding/model/appointment_model.dart';
+import 'package:health_hour/features/scheduling/reschedule_appointment.dart';
 import 'package:intl/intl.dart';
 
 class UpcomingScheduleCard extends StatelessWidget {
@@ -10,50 +12,96 @@ class UpcomingScheduleCard extends StatelessWidget {
     required this.specialization,
     required this.date,
     required this.time,
+    required this.appointment,
+    required this.appointmentId,
   });
-  final String name, specialization, date, time;
+  final String name, specialization, date, time, appointmentId;
+  final Appointment appointment;
   @override
   Widget build(BuildContext context) {
-     DateTime dateTime = DateTime.parse(date);
-  String  formattedDate =  DateFormat('EEEEEE, dd MMM yyyy').format(dateTime);
-    return Container(
-      height: 0.225.sh,
-      width: 0.8.sw,
-      decoration: BoxDecoration(
-          gradient: const LinearGradient(
-              colors: [ProjectColors.primaryColor, Color(0xFF284179)],
-              begin: AlignmentDirectional(0, -3.6),
-              end: Alignment.bottomRight,
-              stops: [0.6, 0.95]),
-          borderRadius: BorderRadius.circular(15.r),
-          color: ProjectColors.primaryColor),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          ListTile(
-            leading: const CircleAvatar(),
-            title: Text(name, style: ProjectConstants.regularWhiteTitleText),
-            subtitle: Text(specialization,
-                style: ProjectConstants.regularWhiteSubTitleText),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SizedBox(
-                width: 0.5.sw,
-                child: ListTile(
-                  title: Text(formattedDate,
-                      style: ProjectConstants.regularWhiteSubTitleText.copyWith(
-                          fontSize: 12.sp, fontWeight: FontWeight.w500)),
-                  subtitle: Text(time,
-                      style: ProjectConstants.regularWhiteSubTitleText),
+    DateTime dateTime = DateTime.parse(date);
+    String formattedDate = DateFormat('EEEEEE, dd MMM yyyy').format(dateTime);
+    return InkWell(
+      onLongPress: () async {
+        await appointmemntRef
+            .doc(appointmentId)
+            .delete()
+            .then((value) => print("Appointment Deleted"))
+            .catchError((error) => print("Failed to delete user: $error"))
+            .then(
+              (value) => showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  backgroundColor: Colors.white,
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const CircleAvatar(
+                        backgroundColor: ProjectColors.primaryColor,
+                        child: Icon(
+                          Icons.check,
+                          color: Colors.white,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 0.025.sh,
+                      ),
+                      const Text(
+                        'Your appointment has been cancelled successfully',
+                        textAlign: TextAlign.center,
+                      ),
+                      TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('Ok'))
+                    ],
+                  ),
                 ),
               ),
-              IconButton(
-                  onPressed: () {}, icon: Image.asset(ProjectImages.contact))
-            ],
-          )
-        ],
+            );
+      },
+      onTap: () => Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => RescheduleAppointment(
+              appointment: appointment, appointmentId: appointmentId))),
+      child: Container(
+        height: 0.225.sh,
+        width: 0.8.sw,
+        decoration: BoxDecoration(
+            gradient: const LinearGradient(
+                colors: [ProjectColors.primaryColor, Color(0xFF284179)],
+                begin: AlignmentDirectional(0, -3.6),
+                end: Alignment.bottomRight,
+                stops: [0.6, 0.95]),
+            borderRadius: BorderRadius.circular(15.r),
+            color: ProjectColors.primaryColor),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            ListTile(
+              leading: const CircleAvatar(),
+              title: Text(name, style: ProjectConstants.regularWhiteTitleText),
+              subtitle: Text(specialization,
+                  style: ProjectConstants.regularWhiteSubTitleText),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  width: 0.5.sw,
+                  child: ListTile(
+                    title: Text(formattedDate,
+                        style: ProjectConstants.regularWhiteSubTitleText
+                            .copyWith(
+                                fontSize: 12.sp, fontWeight: FontWeight.w500)),
+                    subtitle: Text(time,
+                        style: ProjectConstants.regularWhiteSubTitleText),
+                  ),
+                ),
+                IconButton(
+                    onPressed: () {}, icon: Image.asset(ProjectImages.contact))
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

@@ -13,11 +13,11 @@ class StudentHomePage extends StatefulWidget {
   const StudentHomePage({
     super.key,
     required this.data,
-    required this.upcomingSchedule,
+   
   });
 
   final Map<String, dynamic> data;
-  final List upcomingSchedule;
+  
 
   @override
   State<StudentHomePage> createState() => _StudentHomePageState();
@@ -116,6 +116,8 @@ class _StudentHomePageState extends State<StudentHomePage> {
                     return Padding(
                       padding: const EdgeInsets.only(left: 16),
                       child: UpcomingScheduleCard(
+                        appointmentId: snapshot.id,
+                        appointment: appointment,
                           name: 'Dr.${appointment.doctorName}',
                           specialization: appointment.specialization,
                           date: appointment.date,

@@ -24,14 +24,6 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     
-
-    List upcomingSchedule = List.generate(
-        4,
-      (index) => const UpcomingScheduleCard(
-            name: 'Dr. Lawal',
-            specialization: 'Dentist',
-            date: 'Friday, 5 Nov 2024',
-            time: '09:00am - 11:00am'));
     return Scaffold(
       body: FutureBuilder(
         future: users.doc(widget.user!.uid).get(),
@@ -50,9 +42,9 @@ class _HomePageState extends ConsumerState<HomePage> {
               padding: const EdgeInsets.all(16.0),
               child: data['userType'] == 'Student'
                   ? StudentHomePage(
-                      data: data, upcomingSchedule: upcomingSchedule)
+                      data: data,)
                   : DoctortHomePage(
-                      data: data, upcomingSchedule: upcomingSchedule),
+                      data: data,),
             );
           }
           return const Center(child: CircularProgressIndicator());

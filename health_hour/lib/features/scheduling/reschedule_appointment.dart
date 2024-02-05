@@ -28,7 +28,7 @@ class _RescheduleAppointmentState extends ConsumerState<RescheduleAppointment> {
   @override
   Widget build(BuildContext context) {
   //  _selectedDay = DateTime.tryParse(widget.appointment.date);
-   
+   print(currentUserData?.userType);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -76,14 +76,10 @@ class _RescheduleAppointmentState extends ConsumerState<RescheduleAppointment> {
                       child: ListTile(
                         contentPadding: const EdgeInsets.all(0),
                         title: Text(
-                          '${widget.appointment.patientName}',
+                         currentUserData!.userType == 'Student'?'Dr. ${widget.appointment.doctorName}' : '${widget.appointment.patientName}',
                           style: ProjectConstants.regularColoredTitleText,
                         ),
-                        // subtitle: Text(
-                        //   widget.doctor['specialization'],
-                        //   style: ProjectConstants.regularColoredSubTitleText
-                        //       .copyWith(fontSize: 9.sp),
-                        // ),
+                      
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [

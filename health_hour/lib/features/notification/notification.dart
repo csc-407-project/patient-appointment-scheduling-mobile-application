@@ -20,20 +20,25 @@ class _NotificationPageState extends ConsumerState<NotificationsPage> {
     return Scaffold(
       appBar: AppBar(
         leading: SizedBox.shrink(),
-        title: Text('Notifications', style: ProjectConstants.regularColoredTitleText,),
+        title: Text(
+          'Notifications',
+          style: ProjectConstants.regularColoredTitleText,
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: FirestoreListView(
             emptyBuilder: (context) => const Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
                       Icons.notifications_off_outlined,
                       size: 150,
                     ),
                     Text(
-                        "Your notifications will show here as soon as you get one", textAlign: TextAlign.center,)
+                      "Your notifications will show here as soon as you get one",
+                      textAlign: TextAlign.center,
+                    )
                   ],
                 ),
             query: notificationRef.where('patientId',
@@ -47,7 +52,10 @@ class _NotificationPageState extends ConsumerState<NotificationsPage> {
                     side: BorderSide(color: Colors.grey.shade300, width: 1),
                     borderRadius: BorderRadius.circular(10.r),
                   ),
-                  leading: const CircleAvatar(),
+                  leading: CircleAvatar(
+                    radius: 30.r,
+                    child: Image.asset(ProjectImages.profilePicture),
+                  ),
                   title: Text(notification.content),
                   subtitle: Text(notification.time),
                 ),
