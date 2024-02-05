@@ -42,7 +42,7 @@ class _NotificationPageState extends ConsumerState<NotificationsPage> {
                   ],
                 ),
             query: notificationRef.where('patientId',
-                isEqualTo: firebase.currentUser?.uid),
+                isEqualTo: firebase.currentUser?.uid).orderBy('time', descending: true),
             itemBuilder: (context, snapshot) {
               final notification = snapshot.data();
               return Padding(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:health_hour/constants/constants.dart';
 import 'package:health_hour/features/onboarding/model/appointment_model.dart';
+import 'package:health_hour/features/onboarding/model/notification_model.dart';
 import 'package:health_hour/features/scheduling/reschedule_appointment.dart';
 import 'package:intl/intl.dart';
 
@@ -21,14 +22,33 @@ class UpcomingScheduleCard extends StatelessWidget {
   Widget build(BuildContext context) {
     DateTime dateTime = DateTime.parse(date);
     String formattedDate = DateFormat('EEEEEE, dd MMM yyyy').format(dateTime);
+       
+    
+    final now = DateTime.now();
+
+// Extract hour, minute, and AM/PM indicator
+    final hour = now.hour % 12; // Use modulo to get hour in 12-hour format
+    final minute = now.minute;
+    final period = now.hour >= 12 ? "pm" : "am";
+
+// Format the time string
+    final formattedTime =
+        "${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')} $period";
     return InkWell(
       onLongPress: () async {
         await appointmemntRef
             .doc(appointmentId)
             .delete()
             .then((value) => print("Appointment Deleted"))
-            .catchError((error) => print("Failed to delete user: $error"))
-            .then(
+            .catchError((error) => print("Failed to delete user: $error"));
+            await notificationRef.add(CustomNotification(
+                                  content:
+                                      'Your appointment with Dr. ${appointment.doctorName}  for $formattedDate has been cancelled',
+                                  time: formattedTime,
+                                  patientName: appointment.patientName,
+                                  patientId: appointment.patientId,
+                                  doctorName: appointment.doctorName,
+                                  doctorId: appointment.doctorId)) .then(
               (value) => showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
