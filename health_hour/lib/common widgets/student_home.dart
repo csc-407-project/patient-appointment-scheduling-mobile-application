@@ -55,12 +55,13 @@ class _StudentHomePageState extends State<StudentHomePage> {
                     SizedBox(
                       width: 0.01.sw,
                     ),
-                    const Text('Cupertino - Male, 25')
+                    const Text('Part 4')
                   ],
                 ),
               ),
             ),
           ),
+          // const AppAvatar(),
           CircleAvatar(
             radius: 30.r,
             child: Image.asset(ProjectImages.profilePicture),
@@ -83,8 +84,9 @@ class _StudentHomePageState extends State<StudentHomePage> {
                   style: ProjectConstants.regularBold,
                 ),
                 TextButton(
+                  
                     onPressed: () {},
-                    child: Text('View all',
+                    child: Text('',
                         style: ProjectConstants.regularBold
                             .copyWith(fontSize: 10.sp)))
               ],
@@ -105,6 +107,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
             return SizedBox(
               height: 0.23.sh,
               child: FirestoreListView(
+                emptyBuilder: (context) => const Center(child: Text('You don\'t have any upcoming appointments'),),
                   scrollDirection: Axis.horizontal,
                   query: appointmemntRef.where('patientId',
                       isEqualTo: firebase.currentUser?.uid),

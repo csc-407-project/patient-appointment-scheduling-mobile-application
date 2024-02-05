@@ -39,7 +39,7 @@ class _ScheduleAppointmentPageState extends ConsumerState<BookDoctor> {
                   decoration: ShapeDecoration(
                     image: const DecorationImage(
                       image:
-                          NetworkImage("https://via.placeholder.com/275x277"),
+                          AssetImage("assets/images/doctorImage.jpeg"),
                       fit: BoxFit.fill,
                     ),
                     color: ProjectColors.primaryColor,

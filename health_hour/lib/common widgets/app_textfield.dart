@@ -7,20 +7,23 @@ class AppTextField extends StatelessWidget {
     super.key,
     this.prefixIcon,
     this.suffixIcon,
-    this.label, this.controller,
+    this.label, this.controller, this.obscureText = false
   });
   final IconData? prefixIcon;
-  final IconData? suffixIcon;
+  final Widget? suffixIcon;
   final String? label;
   final TextEditingController? controller;
+  final bool obscureText;
   @override
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
+      obscureText: obscureText,
       decoration: InputDecoration(
         label: Text(label!),
           prefixIcon: Icon(prefixIcon!),
-          suffixIcon: Icon(suffixIcon),
+          suffixIcon: suffixIcon,
+          
           border: OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(50.r)))),
     );

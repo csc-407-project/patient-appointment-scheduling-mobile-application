@@ -2,6 +2,7 @@ import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:health_hour/constants/constants.dart';
 import 'package:health_hour/features/auhtenticate/signup/signup_page.dart';
 import 'package:health_hour/features/onboarding/model/notification_model.dart';
 
@@ -19,6 +20,7 @@ class _NotificationPageState extends ConsumerState<NotificationsPage> {
     return Scaffold(
       appBar: AppBar(
         leading: SizedBox.shrink(),
+        title: Text('Notifications', style: ProjectConstants.regularColoredTitleText,),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

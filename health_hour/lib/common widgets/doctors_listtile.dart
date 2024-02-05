@@ -28,12 +28,38 @@ class DoctorsListTile extends StatelessWidget {
         style: ProjectConstants.regularWhiteSubTitleText
             .copyWith(color: ProjectColors.alternateTextColor, fontSize: 10.sp),
       ),
-      leading: const CircleAvatar(),
+      leading:AppAvatar(image: "assets/images/doctorImage.jpeg",),
       trailing: IconButton(
         onPressed: () {},
         icon: const Icon(Icons.more_horiz_outlined),
       ),
       onTap: onTap,
     );
+  }
+}
+
+class AppAvatar extends StatelessWidget {
+  const AppAvatar({
+    super.key, required this.image,
+  });
+final String image;
+  @override
+  Widget build(BuildContext context) {
+    return Container( 
+      height: 50,
+      width: 50,
+      decoration: ShapeDecoration(
+                  image:  DecorationImage(
+                    image:
+                        AssetImage(image),
+                    fit: BoxFit.fill,
+                  ),
+                  color: ProjectColors.primaryColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(
+                     Radius.circular(30.r)
+                    ),
+                  ),
+                ),);
   }
 }

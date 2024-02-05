@@ -2,6 +2,7 @@ import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:health_hour/common%20widgets/app_button.dart';
+import 'package:health_hour/common%20widgets/doctors_listtile.dart';
 import 'package:health_hour/constants/constants.dart';
 import 'package:health_hour/features/onboarding/model/appointment_model.dart';
 import 'package:health_hour/features/onboarding/model/notification_model.dart';
@@ -31,10 +32,7 @@ class DoctortHomePage extends StatelessWidget {
           SizedBox(
             width: 0.75.sw,
             child: ListTile(
-                leading: CircleAvatar(
-                  radius: 30.r,
-                  child: Image.asset(ProjectImages.profilePicture),
-                ),
+                leading: const AppAvatar(image: "assets/images/doctorImage.jpeg",),
                 contentPadding: const EdgeInsets.all(0),
                 title: Text(
                   'Dr. ${data['fullName']}',
@@ -134,7 +132,11 @@ class DoctorUpcScheduleCard extends StatelessWidget {
                   width: 0.175.sw,
                   decoration: BoxDecoration(
                       color: ProjectColors.alternateTextColor,
-                      borderRadius: BorderRadius.circular(12.r)),
+                      borderRadius: BorderRadius.circular(12.r), image: const DecorationImage(
+                        image:
+                         AssetImage("assets/images/studentImage.png"),
+                        fit: BoxFit.fill,
+                      ),),
                 ),
                 SizedBox(
                   width: 0.05.sw,

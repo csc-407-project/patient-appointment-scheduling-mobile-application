@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:group_button/group_button.dart';
+import 'package:health_hour/features/auhtenticate/signin/signin_page.dart';
 import 'package:health_hour/features/auhtenticate/signup/signup_page.dart';
 import 'package:health_hour/features/home/bottom_navbar.dart';
 import 'package:health_hour/features/onboarding/model/appointment_model.dart';
@@ -59,7 +60,7 @@ class _ConfirmAppointmentState extends ConsumerState<ConfirmAppointment> {
                     decoration: ShapeDecoration(
                       image: const DecorationImage(
                         image:
-                            NetworkImage("https://via.placeholder.com/275x277"),
+                         AssetImage("assets/images/doctorImage.jpeg"),
                         fit: BoxFit.fill,
                       ),
                       color: ProjectColors.primaryColor,
@@ -217,6 +218,7 @@ class _ConfirmAppointmentState extends ConsumerState<ConfirmAppointment> {
                           ))
                           .then(
                             (value) => showDialog(
+                               barrierDismissible: false,
                               context: context,
                               builder: (context) => AlertDialog(
                                 backgroundColor: Colors.white,
@@ -245,7 +247,7 @@ class _ConfirmAppointmentState extends ConsumerState<ConfirmAppointment> {
                                               MaterialPageRoute(
                                                   builder: (context) =>
                                                       BottomNav(user:firebase
-                                                          .currentUser!)));
+                                                          .currentUser!, userData: currentUserData!,)));
                                         },
                                         child: const Text('Go back home'))
                                   ],

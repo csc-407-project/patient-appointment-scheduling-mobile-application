@@ -2,8 +2,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:health_hour/features/auhtenticate/signin/landing_page.dart';
+import 'package:health_hour/features/auhtenticate/signin/signin_page.dart';
 import 'package:health_hour/features/home/bottom_navbar.dart';
 import 'package:health_hour/features/onboarding/provider/onboarding_provider.dart';
 import 'package:health_hour/features/onboarding/views/onboarding_page.dart';
@@ -12,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 bool onBoarded = false;
+GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
  
@@ -37,6 +40,8 @@ class MyApp extends ConsumerWidget {
         designSize: const Size(360, 900),
         builder: (_, child) {
           return MaterialApp(
+            builder: FToastBuilder(),
+            navigatorKey: navigatorKey,
             debugShowCheckedModeBanner: false,
             title: 'Health Hour',
             theme: ThemeData(
@@ -51,7 +56,7 @@ class MyApp extends ConsumerWidget {
               textTheme: GoogleFonts.plusJakartaSansTextTheme(),
               useMaterial3: true,
             ),
-            home: completed? const LandingPage(): const OnboardingPage(),
+            home: completed? const  SignInPage(): const OnboardingPage(),
             // initialRoute: '/',
 
           );

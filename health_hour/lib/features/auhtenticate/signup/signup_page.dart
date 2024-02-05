@@ -3,13 +3,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:health_hour/common%20widgets/app_button.dart';
 import 'package:health_hour/common%20widgets/app_textfield.dart';
 import 'package:health_hour/constants/constants.dart';
 import 'package:health_hour/features/auhtenticate/signin/signin_page.dart';
 import 'package:health_hour/features/home/bottom_navbar.dart';
+import 'package:health_hour/features/onboarding/model/user_model.dart';
 
- final firebase = FirebaseAuth.instance;
+final firebase = FirebaseAuth.instance;
+
 class SignUpPage extends ConsumerStatefulWidget {
   const SignUpPage(this.userType, {super.key});
   final String userType;
@@ -23,7 +26,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController specializationController =
       TextEditingController();
- 
+bool obscureText = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,7 +68,10 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
               controller: passwordController,
               label: 'Password',
               prefixIcon: Icons.lock_outline,
-              suffixIcon: Icons.remove_red_eye,
+              suffixIcon: IconButton(onPressed: ()=> setState(() {
+                obscureText = !obscureText;
+              }), icon: obscureText ? Icon(Icons.visibility):Icon(Icons.visibility_off) ),
+              obscureText: obscureText,
             ),
             widget.userType == 'Doctor'
                 ? SizedBox(
@@ -86,36 +92,48 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
               onPressed: () async {
                 if (emailController.text.isNotEmpty &&
                     passwordController.text.isNotEmpty) {
-                  final result = await firebase.createUserWithEmailAndPassword(
+                      try {
+                        final result = await firebase.createUserWithEmailAndPassword(
                       email: emailController.text,
                       password: passwordController.text);
                   User? user = result.user;
                   await user!.updateDisplayName(nameController.text);
                   await user.reload();
-DocumentReference users = FirebaseFirestore.instance.doc('users/${user.uid}');
-                  // DocumentReference users = widget.userType == 'Doctor'
-                  //     ? FirebaseFirestore.instance.doc('doctors/${user.uid}')
-                  //     : FirebaseFirestore.instance.doc('students/${user.uid}');
+                  DocumentReference users =
+                      FirebaseFirestore.instance.doc('users/${user.uid}');
+
                   await users.set({
                     'fullName': nameController.text,
                     'id': user.uid,
                     'email': user.email,
                     'userType': widget.userType,
-                     'specialization'
-                        : specializationController.text,
-                    // specializationController.text.isNotEmpty
-                    
-                    //     ? 'specialization'
-                    //     : specializationController.text: null,
-                  }).then((value) {
-                    final userq =FirebaseFirestore.instance
-                      .collection('users').where('id', isEqualTo: firebase.currentUser!.uid);
-                      print(userq);
-                    return Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              BottomNav(user: firebase.currentUser)));
+                    'specialization': specializationController.text,
                   });
+                   currentUser = user;
+                  await userRef
+                      .where('id', isEqualTo: currentUser!.uid)
+                      .get()
+                      .then((snapshot) {
+                    currentUserData = snapshot.docs[0].data();
+                    return Navigator.of(context)
+                        .pushReplacement(MaterialPageRoute(
+                            builder: (context) => BottomNav(
+                                  user: currentUser,
+                                  userData: snapshot.docs[0].data(),
+                                )));
+                  });
+                      } on FirebaseAuthException catch (e) {
+                        Fluttertoast.showToast(
+                        msg: getMessageFromErrorCode(e.code),
+                        toastLength: Toast.LENGTH_LONG,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.red,
+                        textColor: Colors.white,
+                        fontSize: 16.0);
+                      }
+                  
+                  
                 }
               },
               child: const Text(
